@@ -1,0 +1,77 @@
+<h1>Schedule for <%= @location.name %></h1>
+
+<div class="grid grid-cols-3 gap-6">
+  <!-- Past Dates -->
+  <div>
+    <h2>Past Dates</h2>
+    <% if @past_sessions.any? %>
+      <ul>
+        <% @past_sessions.each do |s| %>
+          <li><%= s.date %> — <%= s.session_type.title %></li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p>No past sessions found.</p>
+    <% end %>
+  </div>
+
+  <!-- Upcoming Dates -->
+  <div>
+    <h2>Upcoming Dates</h2>
+    <% if @upcoming_sessions.any? %>
+      <ul>
+        <% @upcoming_sessions.each do |s| %>
+          <li>
+            <strong><%= s.date %> — <%= s.session_type.title %></strong>
+            <%= link_to "➕ Add Time Slot", new_admin_scheduled_session_time_slot_path(s) %>
+
+            <% if s.time_slots.any? %>
+              <ul>
+                <% s.time_slots.each do |ts| %>
+                  <li>
+                    ⏰ <%= ts.start_time.strftime("%H:%M") %> - <%= ts.end_time.strftime("%H:%M") %>
+                    (Capacity: <%= ts.capacity %>)
+                  </li>
+                <% end %>
+              </ul>
+            <% else %>
+              <p>No time slots yet for this session.</p>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p>No upcoming sessions scheduled.</p>
+    <% end %>
+  </div>
+
+  <!-- Create New Date -->
+  <div>
+    <h2>Create New Date</h2>
+
+    <% if @scheduled_session.errors.any? %>
+      <div class="errors">
+        <h4>⚠️ Please fix the following:</h4>
+        <ul>
+          <% @scheduled_session.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <%= form_with model: [:admin, @scheduled_session], local: true do |f| %>
+      <div class="field">
+        <%= f.label :date %>
+        <%= f.date_field :date %>
+      </div>
+
+      <div class="field">
+        <%= f.label :session_type_id, "Session Type" %>
+        <%= f.collection_select :session_type_id, SessionType.all, :id, :title %>
+      </div>
+
+      <%= f.submit "➕ Add Date", class: "btn btn-primary" %>
+    <% end %>
+  </div>
+</div>

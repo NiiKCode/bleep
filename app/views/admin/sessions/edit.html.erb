@@ -1,0 +1,17 @@
+<h2>Edit Session</h2>
+
+<%= form_with model: [:admin, @session], local: true do |form| %>
+  <%= form.label :title %>
+  <%= form.text_field :title %><br>
+
+  <%= form.label :description %>
+  <%= form.text_area :description %><br>
+
+  <%= form.label :date %>
+  <%= form.date_field :date %><br>
+
+  <%= form.label :price %>
+  <%= form.number_field :price, step: 0.01 %><br>
+
+  <%= form.submit "Update Session", class: "btn btn-primary" %>
+<% end %>

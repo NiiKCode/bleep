@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Admin | Bleep</title>
+    <%= render "layouts/head" %>
+
+    <!-- RailsAdmin-specific assets -->
+    <%= stylesheet_link_tag "rails_admin/application", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "rails_admin/application", "data-turbo-track": "reload" %>
+  </head>
+
+  <body class="rails_admin">
+    <nav class="navbar">
+      <%= link_to "📍 Locations", admin_locations_path, class: "nav-link me-3" %>
+      <span class="me-3">Signed in as <%= current_user.email %></span>
+      <%= link_to "Sign out", main_app.destroy_user_session_path, method: :delete, class: "btn btn-danger" %>
+    </nav>
+
+    <%= yield %>
+  </body>
+</html>

@@ -1,0 +1,17 @@
+<h2>New Session for <%= @location.name %></h2>
+
+<%= form_with model: [:admin, @location, @session], local: true do |form| %>
+  <%= form.label :title %>
+  <%= form.text_field :title %><br>
+
+  <%= form.label :description %>
+  <%= form.text_area :description %><br>
+
+  <%= form.label :date %>
+  <%= form.date_field :date %><br>
+
+  <%= form.label :price %>
+  <%= form.number_field :price, step: 0.01 %><br>
+
+  <%= form.submit "Create Session", class: "btn btn-success" %>
+<% end %>

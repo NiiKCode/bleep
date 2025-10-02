@@ -1,10 +1,23 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  # RailsAdmin lives under a different path
+  mount RailsAdmin::Engine => '/rails_admin', as: 'rails_admin'
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
-  get "up" => "rails/health#show", as: :rails_health_check
+  devise_for :users
 
-  # Defines the root path route ("/")
-  # root "posts#index"
+  namespace :admin do
+    root to: "dashboard#index"
+    get "dashboard", to: "dashboard#index"
+
+    resources :locations do
+      member do
+        get :schedule       # 👈 custom page for scheduling
+        post :create_date   # 👈 form submission for new dates
+      end
+    end
+
+    resources :session_types
+    resources :scheduled_sessions do
+      resources :time_slots, only: [:new, :create, :edit, :update, :destroy]
+    end
+  end
 end

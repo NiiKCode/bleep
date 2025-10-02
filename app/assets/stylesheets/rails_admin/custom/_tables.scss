@@ -1,0 +1,15 @@
+/* ✅ Tables */
+.rails_admin table {
+  background: #fff;
+  border-collapse: collapse;
+  width: 100%;
+}
+.rails_admin table th {
+  background: #f1f3f5;
+  font-weight: 600;
+  padding: 10px;
+}
+.rails_admin table td {
+  padding: 8px;
+  border-top: 1px solid #dee2e6;
+}

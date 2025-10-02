@@ -1,0 +1,20 @@
+// This file extends the default RailsAdmin styles
+// You don’t need to re-import bootstrap or core styles, they are bundled in
+
+/*
+ *= require_self
+ */
+
+ @import "rails_admin/custom/base";
+ @import "rails_admin/custom/sidebar";
+ @import "rails_admin/custom/header";
+ @import "rails_admin/custom/tables";
+ @import "rails_admin/custom/buttons";
+ @import "rails_admin/custom/forms";
+
+
+// Optional: add overrides for colors, fonts, or layouts here
+// Example: tweak the sidebar background
+// .sidebar-nav {
+//   background-color: #222;
+// }
