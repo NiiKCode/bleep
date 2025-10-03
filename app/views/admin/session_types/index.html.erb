@@ -1,0 +1,34 @@
+<h1>Session Types</h1>
+
+<div class="mb-3">
+  <%= link_to "➕ Add new session type", new_admin_session_type_path, class: "btn btn-primary" %>
+</div>
+
+<% if @session_types.any? %>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @session_types.each do |session_type| %>
+        <tr>
+          <td><%= session_type.title %></td>
+          <td><%= truncate(session_type.description, length: 60) %></td>
+          <td>
+            <%= link_to "✏️ Edit", edit_admin_session_type_path(session_type), class: "btn btn-sm btn-secondary" %>
+            <%= link_to "🗑 Delete", admin_session_type_path(session_type),
+                        method: :delete,
+                        data: { confirm: "Are you sure?" },
+                        class: "btn btn-sm btn-danger" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No session types created yet.</p>
+<% end %>

@@ -1,0 +1,26 @@
+<%= form_with model: [:admin, @session_type], local: true, data: { turbo: false } do |form| %>
+  <% if @session_type.errors.any? %>
+    <div class="alert alert-danger">
+      <h2><%= pluralize(@session_type.errors.count, "error") %> prohibited this session type from being saved:</h2>
+      <ul>
+        <% @session_type.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :title %>
+    <%= form.text_field :title, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :description %>
+    <%= form.text_area :description, class: "form-control" %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit class: "btn btn-primary" %>
+  </div>
+<% end %>

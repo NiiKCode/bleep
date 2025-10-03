@@ -1,7 +1,7 @@
 class Admin::LocationsController < ApplicationController
   before_action :authenticate_user!
   before_action :require_admin!
-  before_action :set_location, only: [:show, :edit, :update, :destroy,
+  before_action :set_location, only: [:edit, :update, :destroy,
                                       :schedule, :create_date]
 
   # --------------------------
@@ -12,9 +12,9 @@ class Admin::LocationsController < ApplicationController
     @locations = Location.all
   end
 
-  def show
-    @scheduled_sessions = @location.scheduled_sessions.includes(:session_type, :time_slots)
-  end
+  # def show
+  #  @scheduled_sessions = @location.scheduled_sessions.includes(:session_type, :time_slots)
+  # end
 
   def new
     @location = Location.new
@@ -33,7 +33,7 @@ class Admin::LocationsController < ApplicationController
 
   def update
     if @location.update(location_params)
-      redirect_to admin_location_path(@location), notice: "Location updated."
+      redirect_to admin_dashboard_path, notice: "Location updated."
     else
       render :edit, status: :unprocessable_entity
     end

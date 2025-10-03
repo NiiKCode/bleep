@@ -3,8 +3,8 @@ class Admin::DashboardController < ApplicationController
   before_action :require_admin!
 
   def index
-    @locations = Location.all
-    @sessions  = Session.all
+    @locations = Location.all.order(:name)
+    @session_types = SessionType.all.order(:title)
   end
 
   private

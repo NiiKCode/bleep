@@ -1,0 +1,21 @@
+<%= form_with model: [:admin, @location], local: true, data: { turbo: false } do |form| %>
+  <% if @location.errors.any? %>
+    <div class="alert alert-danger">
+      <h2><%= pluralize(@location.errors.count, "error") %> prohibited this location from being saved:</h2>
+      <ul>
+        <% @location.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :name %>
+    <%= form.text_field :name, class: "form-control" %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit class: "btn btn-primary" %>
+  </div>
+<% end %>

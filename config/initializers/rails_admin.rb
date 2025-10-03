@@ -1,4 +1,4 @@
-require Rails.root.join("lib/rails_admin/schedule_location.rb")
+# require Rails.root.join("lib/rails_admin/schedule_location.rb")
 
 RailsAdmin.config do |config|
   config.asset_source = :importmap
@@ -74,6 +74,6 @@ RailsAdmin.config do |config|
     show_in_app
 
     # 🆕 Custom action (from lib/rails_admin/schedule_location.rb)
-    schedule_location
+    # schedule_location
   end
 end
