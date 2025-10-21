@@ -57,7 +57,14 @@
 </div>
 
 <!-- Shared Delete Confirmation Modal -->
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+<div
+  class="modal fade"
+  id="confirmDeleteModal"
+  tabindex="-1"
+  aria-labelledby="confirmDeleteModalLabel"
+  aria-hidden="true"
+  data-controller="delete-modal"
+>
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content rounded-lg shadow-lg">
       <div class="modal-header">
@@ -69,7 +76,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <form id="deleteForm" method="post" action="">
+        <form id="deleteForm" method="post" action="" data-delete-modal-target="form">
           <%= hidden_field_tag :_method, :delete %>
           <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
           <button type="submit" class="btn btn-danger">Yes, delete</button>

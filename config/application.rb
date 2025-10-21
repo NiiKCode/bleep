@@ -33,7 +33,13 @@ module Bleep
     #
     # These settings can be overridden in specific environments using the files
     # in config/environments, which are processed later.
-    config.assets.enabled = true
+    # Enable Sprockets only for stylesheets and images (RailsAdmin etc.)
+    config.assets.precompile = [
+      "rails_admin/application.css",
+      "rails_admin/application.js",
+      "application.css"
+    ]
+    config.assets.paths << Rails.root.join("app", "assets", "images")
 
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")

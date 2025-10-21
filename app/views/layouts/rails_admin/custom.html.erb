@@ -2,11 +2,12 @@
 <html>
   <head>
     <title>Admin | Bleep</title>
-    <%= render "layouts/head" %>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
 
-    <!-- RailsAdmin-specific assets -->
+    <!-- RailsAdmin assets only -->
     <%= stylesheet_link_tag "rails_admin/application", "data-turbo-track": "reload" %>
-    <%= javascript_include_tag "rails_admin/application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
   </head>
 
   <body class="rails_admin">

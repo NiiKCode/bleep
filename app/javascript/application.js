@@ -1,15 +1,29 @@
-// Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
+// app/javascript/application.js
 import "@hotwired/turbo-rails"
-import "./controllers"
-import * as bootstrap from "bootstrap"
+import "controllers"
+import "bootstrap" // loads and attaches bootstrap to window
 
 document.addEventListener("DOMContentLoaded", () => {
-  const confirmDeleteModal = document.getElementById("confirmDeleteModal");
+  const modalEl = document.getElementById("confirmDeleteModal");
   const deleteForm = document.getElementById("deleteForm");
 
-  confirmDeleteModal.addEventListener("show.bs.modal", (event) => {
-    const button = event.relatedTarget;
-    const url = button.getAttribute("data-delete-url");
-    deleteForm.setAttribute("action", url);
+  if (!modalEl || !deleteForm) return;
+
+  document.querySelectorAll(".delete-link").forEach((el) => {
+    el.addEventListener("click", (event) => {
+      event.preventDefault();
+
+      const url = el.dataset.deleteUrl;
+      if (!url) {
+        console.warn("Missing data-delete-url on", el);
+        return;
+      }
+
+      deleteForm.setAttribute("action", url);
+
+      // ✅ Use global bootstrap reference (works with Importmap)
+      const modal = window.bootstrap.Modal.getOrCreateInstance(modalEl);
+      modal.show();
+    });
   });
 });

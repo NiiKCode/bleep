@@ -1,9 +1,8 @@
-
 // app/javascript/controllers/index.js
-
 import { Application } from "@hotwired/stimulus"
-import { definitionsFromContext } from "@hotwired/stimulus-webpack-helpers"
+import DeleteModalController from "./delete_modal_controller.js"
 
 const application = Application.start()
-const context = require.context("controllers", true, /\.js$/)
-application.load(definitionsFromContext(context))
+
+// Manually register controllers here (since Importmap doesn’t autoload)
+application.register("delete-modal", DeleteModalController)
