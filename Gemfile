@@ -74,3 +74,5 @@ group :test do
 end
 gem 'devise'
 gem 'rails_admin'
+
+gem "tailwindcss-rails", "~> 4.4"

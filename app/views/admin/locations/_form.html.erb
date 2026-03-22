@@ -10,10 +10,15 @@
     </div>
   <% end %>
 
-  <div class="mb-3">
-    <%= form.label :name %>
-    <%= form.text_field :name, class: "form-control" %>
-  </div>
+<div class="mb-3">
+  <%= form.label :name %>
+  <%= form.text_field :name, class: "form-control" %>
+</div>
+
+<div class="mb-3">
+  <%= form.label :city %>
+  <%= form.text_field :city, class: "form-control" %>
+</div>
 
   <div class="actions">
     <%= form.submit class: "btn btn-primary" %>

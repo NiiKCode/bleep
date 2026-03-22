@@ -1,0 +1,57 @@
+<% if scheduled_sessions.blank? %>
+  <p class="text-center text-gray-500 pt-6">
+    No sessions found. Try changing your filters.
+  </p>
+<% else %>
+
+  <% scheduled_sessions.each do |session| %>
+    <div class="pb-6">
+
+      <!-- Location -->
+      <div class="font-bold text-lg">
+        <%= session.location.name %>
+      </div>
+
+      <div class="italic text-gray-700">
+        <%= session.location.city %>
+      </div>
+
+      <!-- Date -->
+      <div class="mt-2 font-bold">
+        <%= session.date.strftime("%a %-d %b, %Y") %>
+      </div>
+
+      <!-- Session Type -->
+      <div class="mt-2 text-xl font-bold text-fuchsia-600">
+        <%= session.session_type.title %>
+      </div>
+
+      <!-- Time Slots -->
+      <div class="mt-4 space-y-3">
+
+        <% slots = time_slots.presence || session.time_slots.order(:start_time) %>
+
+        <% slots.each do |time_slot| %>
+          <div class="flex items-center justify-between">
+
+            <div class="text-lg font-bold italic">
+              <%= time_slot.start_time.strftime("%H.%M") %>
+              to
+              <%= time_slot.end_time.strftime("%H.%M") %>
+            </div>
+
+            <%= link_to "BOOK",
+                  new_booking_path(time_slot_id: time_slot.id),
+                  class: "font-bold text-lg tracking-wide" %>
+
+          </div>
+        <% end %>
+
+      </div>
+
+      <hr class="mt-6">
+
+    </div>
+  <% end %>
+
+<% end %>

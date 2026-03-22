@@ -1,0 +1,94 @@
+<div class="w-full">
+
+  <!-- Desktop layout = 3 columns -->
+  <div class="mx-auto w-full max-w-7xl lg:grid lg:grid-cols-3 lg:min-h-screen">
+
+    <!-- SECTION 1: Brand intro -->
+    <section class="min-h-screen lg:min-h-screen flex items-center justify-center bg-lime-300 px-6 py-16">
+      <div class="w-full max-w-md">
+        <h1 class="text-6xl font-black leading-none tracking-tight">
+          BEAT<br>
+          YOUR<br>
+          BEST
+        </h1>
+
+        <p class="mt-8 text-xl font-bold leading-snug">
+          Go solo or with a friend, track your fitness and beat your best
+        </p>
+
+        <div class="mt-12">
+          <a href="#directory" class="font-bold underline">
+            See dates, times & locations →
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: Directory -->
+    <section id="directory" class="min-h-screen lg:min-h-screen bg-white px-6 py-10">
+      <%= form_with url: root_path, method: :get, local: true do %>
+
+        <!-- City -->
+        <div class="border-b py-4">
+          <label class="block text-lg font-bold">City</label>
+
+          <%= select_tag :city,
+                options_for_select(@cities, @selected_city),
+                include_blank: false,
+                class: "w-full text-lg font-semibold italic bg-transparent border-0 focus:ring-0",
+                onchange: "this.form.requestSubmit()" %>
+        </div>
+
+        <!-- Location -->
+        <div class="border-b py-4">
+          <label class="block text-lg font-bold">Location</label>
+
+          <%= select_tag :location_id,
+                options_from_collection_for_select(@locations, :id, :name, @selected_location_id),
+                include_blank: false,
+                class: "w-full text-lg font-semibold italic bg-transparent border-0 focus:ring-0",
+                onchange: "this.form.requestSubmit()" %>
+        </div>
+
+        <!-- Date -->
+        <div class="border-b py-4">
+          <label class="block text-lg font-bold">Date</label>
+
+          <%= select_tag :date,
+                options_for_select(@available_dates.map { |d| [d.strftime("%a %-d %b %Y"), d] }, @selected_date),
+                include_blank: false,
+                class: "w-full text-lg font-semibold italic bg-transparent border-0 focus:ring-0",
+                onchange: "this.form.requestSubmit()" %>
+        </div>
+
+        <!-- Session Type -->
+        <div class="border-b py-4">
+          <label class="block text-lg font-bold">Session Type</label>
+
+          <%= select_tag :session_type_id,
+                options_from_collection_for_select(@available_session_types, :id, :title, @selected_session_type_id),
+                include_blank: false,
+                class: "w-full text-lg font-semibold italic bg-transparent border-0 focus:ring-0",
+                onchange: "this.form.requestSubmit()" %>
+        </div>
+
+      <% end %>
+
+      <div class="pt-6 space-y-4">
+        <%= render "sessions/results",
+              scheduled_sessions: @scheduled_sessions,
+              time_slots: @time_slots %>
+      </div>
+    </section>
+
+    <!-- SECTION 3: Brand image block -->
+    <section class="min-h-screen lg:min-h-screen bg-gray-100 px-6 py-16 flex items-end">
+      <div class="w-full max-w-md">
+        <a href="#directory" class="font-bold underline">
+          See dates, times & locations →
+        </a>
+      </div>
+    </section>
+
+  </div>
+</div>

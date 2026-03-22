@@ -2,3 +2,18 @@
  *= require_self
  *= require_tree .
 */
+/* -------------------------------------------
+   Clean dropdown menu styling (Account menu)
+-------------------------------------------- */
+
+.dropdown-menu {
+  padding: 10px !important;
+}
+
+.dropdown-item {
+  font-size: 16px;
+}
+
+.dropdown-item:hover {
+  background: #f4f4f5; /* light neutral */
+}

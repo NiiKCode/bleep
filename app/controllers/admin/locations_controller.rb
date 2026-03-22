@@ -1,8 +1,7 @@
 class Admin::LocationsController < ApplicationController
   before_action :authenticate_user!
   before_action :require_admin!
-  before_action :set_location, only: [:edit, :update, :destroy,
-                                      :schedule, :create_date]
+  before_action :set_location, only: [:edit, :update, :schedule, :create_date, :destroy, :destroy_scheduled_session]
 
   # --------------------------
   # Standard CRUD
@@ -68,6 +67,13 @@ class Admin::LocationsController < ApplicationController
     end
   end
 
+  # POST /admin/locations/:id/delete_scheduled_session/:session_id
+  def destroy_scheduled_session
+    @scheduled_session = @location.scheduled_sessions.find(params[:session_id])
+    @scheduled_session.destroy
+    redirect_to schedule_admin_location_path(@location), notice: "Scheduled session deleted successfully."
+  end
+
   private
 
   def set_location
@@ -75,7 +81,7 @@ class Admin::LocationsController < ApplicationController
   end
 
   def location_params
-    params.require(:location).permit(:name)
+    params.require(:location).permit(:name, :city)
   end
 
   def scheduled_session_params

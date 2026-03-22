@@ -2,12 +2,40 @@
 <html>
   <head>
     <title>Bleep</title>
-    <%= render "layouts/head" %>
 
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <!-- ✅ THIS LOADS YOUR CSS -->
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+
+    <!-- ✅ THIS LOADS STIMULUS / JS -->
     <%= javascript_importmap_tags %>
   </head>
-  <body>
-    <%= yield %>
+
+  <body class="bg-white text-gray-900">
+
+    <!-- Top Bar -->
+    <div class="w-full max-w-md mx-auto px-4 pt-6">
+      <div class="flex items-center justify-between">
+        <div class="font-bold text-lg tracking-tight">
+          Bleep
+        </div>
+
+        <%= render "shared/account_menu" %>
+      </div>
+    </div>
+
+    <!-- Admin nav -->
+    <%= render "shared/admin_nav" if current_user&.admin? %>
+
+    <!-- Main content -->
+    <main class="w-full max-w-md mx-auto px-4 py-6">
+      <%= yield %>
+    </main>
+
   </body>
 </html>

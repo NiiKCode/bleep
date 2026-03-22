@@ -1,0 +1,15 @@
+<div class="flex items-center justify-end">
+
+  <% if user_signed_in? %>
+    <%= link_to edit_user_registration_path,
+        class: "inline-flex items-center justify-center w-10 h-10 rounded-full border font-bold" do %>
+      <%= current_user.initials %>
+    <% end %>
+  <% else %>
+    <%= link_to new_user_session_path,
+        class: "text-3xl font-bold leading-none" do %>
+      →
+    <% end %>
+  <% end %>
+
+</div>

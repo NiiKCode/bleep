@@ -1,0 +1,22 @@
+<h1>Add Time Slot for <%= @scheduled_session.session_type.title %> (<%= @scheduled_session.date.strftime("%d %b %Y") %>)</h1>
+
+<%= form_with model: [:admin, @scheduled_session, @time_slot], local: true do |f| %>
+  <div class="field">
+    <%= f.label :start_time %>
+    <%= f.time_field :start_time %>
+  </div>
+
+  <div class="field">
+    <%= f.label :end_time %>
+    <%= f.time_field :end_time %>
+  </div>
+
+  <div class="field">
+    <%= f.label :capacity %>
+    <%= f.number_field :capacity, min: 1 %>
+  </div>
+
+  <%= f.submit "Add Time Slot", class: "btn btn-primary" %>
+<% end %>
+
+<%= link_to "⬅ Back", schedule_admin_location_path(@scheduled_session.location), class: "btn btn-secondary mt-3" %>

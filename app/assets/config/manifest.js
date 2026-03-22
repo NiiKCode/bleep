@@ -8,3 +8,4 @@
 // ✅ Silence sprockets warnings about importmap-managed JS files
 //= link application.js
 //= link_tree ../../javascript/controllers .js
+//= link_tree ../builds
