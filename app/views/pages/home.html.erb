@@ -1,94 +1,119 @@
 <div class="w-full">
 
-  <!-- Desktop layout = 3 columns -->
-  <div class="mx-auto w-full max-w-7xl lg:grid lg:grid-cols-3 lg:min-h-screen">
+  <!-- SECTION 1: Hero -->
+	<section class="h-[65vh] sm:min-h-screen lg:min-h-[125vh] flex items-center justify-center bg-cover bg-center overflow-hidden pt-5 sm:pt-20 md:pt-24"
+		style="background-image: url('<%= asset_path('homepage_background.png') %>');">
 
-    <!-- SECTION 1: Brand intro -->
-    <section class="min-h-screen lg:min-h-screen flex items-center justify-center bg-lime-300 px-6 py-16">
-      <div class="w-full max-w-md">
-        <h1 class="text-6xl font-black leading-none tracking-tight">
-          BEAT<br>
-          YOUR<br>
-          BEST
-        </h1>
+		<div class="w-full px-4 sm:px-6">
 
-        <p class="mt-8 text-xl font-bold leading-snug">
-          Go solo or with a friend, track your fitness and beat your best
-        </p>
+			<div class="relative z-10 w-full max-w-5xl mx-auto text-center -mt-2 sm:-mt-6 md:-mt-4 lg:-mt-27">
 
-        <div class="mt-12">
-          <a href="#directory" class="font-bold underline">
-            See dates, times & locations →
-          </a>
-        </div>
-      </div>
-    </section>
+				<h1 class="font-futura font-bold tracking-tight text-center leading-[0.82] mx-auto max-w-[90vw]">
 
-    <!-- SECTION 2: Directory -->
-    <section id="directory" class="min-h-screen lg:min-h-screen bg-white px-6 py-10">
+					<span class="block text-[clamp(7rem,20vw,13rem)] text-center">
+						<span class="inline-block">
+							BE<span class="relative inline-block">
+								<span class="relative inline-block">
+									AT
+									<span style="
+										position: absolute;
+										left: 0;
+										top: 0.3em;
+										width: 100%;
+										height: 0.18em;
+										background: #ec4899;
+										transform: rotate(6deg);
+										z-index: 20;
+										pointer-events: none;
+									"></span>
+								</span>
+							</span>
+						</span>
+					</span>
+
+					<span class="block text-[clamp(7rem,20vw,13rem)] -mt-1">
+						YOUR
+					</span>
+
+					<span class="block text-[clamp(7rem,20vw,13rem)] -mt-1">
+						BEST
+					</span>
+
+				</h1>
+
+				<p class="mt-2 sm:mt-3 text-[clamp(1.7rem,4.9vw,2.5rem)] font-futura font-extrabold italic leading-[1.3] max-w-lg mx-auto text-center">
+					<span class="block">Go solo or with a</span>
+					<span class="block">friend, track your</span>
+					<span class="block">fitness and beat</span>
+					<span class="block">your best</span>
+				</p>
+
+			</div>
+
+		</div>
+
+	</section>
+
+  <!-- SECTION 2: Directory -->
+  <section id="directory" class="min-h-screen bg-white px-6 py-10">
+    <div class="w-full max-w-md mx-auto lg:max-w-xl">
+
       <%= form_with url: root_path, method: :get, local: true do %>
 
-        <!-- City -->
         <div class="border-b py-4">
           <label class="block text-lg font-bold">City</label>
-
           <%= select_tag :city,
-                options_for_select(@cities, @selected_city),
-                include_blank: false,
-                class: "w-full text-lg font-semibold italic bg-transparent border-0 focus:ring-0",
-                onchange: "this.form.requestSubmit()" %>
+              options_for_select(@cities, @selected_city),
+              include_blank: false,
+              class: "w-full text-lg font-semibold italic bg-transparent border-0 focus:ring-0",
+              onchange: "this.form.requestSubmit()" %>
         </div>
 
-        <!-- Location -->
         <div class="border-b py-4">
           <label class="block text-lg font-bold">Location</label>
-
           <%= select_tag :location_id,
-                options_from_collection_for_select(@locations, :id, :name, @selected_location_id),
-                include_blank: false,
-                class: "w-full text-lg font-semibold italic bg-transparent border-0 focus:ring-0",
-                onchange: "this.form.requestSubmit()" %>
+              options_from_collection_for_select(@locations, :id, :name, @selected_location_id),
+              include_blank: false,
+              class: "w-full text-lg font-semibold italic bg-transparent border-0 focus:ring-0",
+              onchange: "this.form.requestSubmit()" %>
         </div>
 
-        <!-- Date -->
         <div class="border-b py-4">
           <label class="block text-lg font-bold">Date</label>
-
           <%= select_tag :date,
-                options_for_select(@available_dates.map { |d| [d.strftime("%a %-d %b %Y"), d] }, @selected_date),
-                include_blank: false,
-                class: "w-full text-lg font-semibold italic bg-transparent border-0 focus:ring-0",
-                onchange: "this.form.requestSubmit()" %>
+              options_for_select(@available_dates.map { |d| [d.strftime("%a %-d %b %Y"), d] }, @selected_date),
+              include_blank: false,
+              class: "w-full text-lg font-semibold italic bg-transparent border-0 focus:ring-0",
+              onchange: "this.form.requestSubmit()" %>
         </div>
 
-        <!-- Session Type -->
         <div class="border-b py-4">
           <label class="block text-lg font-bold">Session Type</label>
-
           <%= select_tag :session_type_id,
-                options_from_collection_for_select(@available_session_types, :id, :title, @selected_session_type_id),
-                include_blank: false,
-                class: "w-full text-lg font-semibold italic bg-transparent border-0 focus:ring-0",
-                onchange: "this.form.requestSubmit()" %>
+              options_from_collection_for_select(@available_session_types, :id, :title, @selected_session_type_id),
+              include_blank: false,
+              class: "w-full text-lg font-semibold italic bg-transparent border-0 focus:ring-0",
+              onchange: "this.form.requestSubmit()" %>
         </div>
 
       <% end %>
 
       <div class="pt-6 space-y-4">
         <%= render "sessions/results",
-              scheduled_sessions: @scheduled_sessions,
-              time_slots: @time_slots %>
+            scheduled_sessions: @scheduled_sessions,
+            time_slots: @time_slots %>
       </div>
-    </section>
 
-    <!-- SECTION 3: Brand image block -->
-    <section class="min-h-screen lg:min-h-screen bg-gray-100 px-6 py-16 flex items-end">
-      <div class="w-full max-w-md">
-        <a href="#directory" class="font-bold underline">
-          See dates, times & locations →
-        </a>
-      </div>
-    </section>
+    </div>
+  </section>
 
-  </div>
+  <!-- SECTION 3 -->
+  <section class="min-h-screen bg-gray-100 px-6 py-16 flex items-end">
+    <div class="w-full max-w-md mx-auto lg:max-w-2xl">
+      <a href="#directory" class="font-bold underline">
+        See dates, times & locations →
+      </a>
+    </div>
+  </section>
+
 </div>

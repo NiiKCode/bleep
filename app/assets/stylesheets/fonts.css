@@ -1,0 +1,15 @@
+@font-face {
+  font-family: "FuturaPT";
+  src: url("futura-pt_bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "FuturaPT";
+  src: url("futura-pt_heavy-oblique.woff2") format("woff2");
+  font-weight: 800;
+  font-style: italic;
+  font-display: swap;
+}
