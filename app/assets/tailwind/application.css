@@ -1,7 +1,13 @@
 @import "tailwindcss";
 
-/* ✅ Fonts */
+/* =========================
+   Fonts (Base Layer)
+   ========================= */
 @layer base {
+
+  /* ---- Futura PT (Normal Width) ---- */
+
+  /* Bold */
   @font-face {
     font-family: "FuturaPT";
     src: url("/assets/futura-pt_bold.woff2") format("woff2");
@@ -10,18 +16,124 @@
     font-display: swap;
   }
 
+  /* Extra Bold */
   @font-face {
     font-family: "FuturaPT";
-    src: url("/assets/futura-pt_heavy_oblique.woff2") format("woff2");
+    src: url("/assets/futura-pt_extra-bold.woff2") format("woff2");
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  /* Extra Bold Italic (Heavy Oblique) */
+  @font-face {
+    font-family: "FuturaPT";
+    src: url("/assets/futura-pt_heavy-oblique.woff2") format("woff2");
     font-weight: 800;
     font-style: italic;
     font-display: swap;
   }
+
+  /* ---- Futura PT Condensed ---- */
+  @font-face {
+    font-family: "FuturaPT Condensed";
+    src: url("/assets/futura-pt_comd-extra-bold.woff2") format("woff2");
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+  }
 }
 
-/* ✅ Utilities */
+
+/* =========================
+   Design Tokens
+   ========================= */
+@layer base {
+  :root {
+    --font-primary: "FuturaPT", sans-serif;
+    --font-condensed: "FuturaPT Condensed", sans-serif;
+  }
+}
+
+
+/* =========================
+   Utilities
+   ========================= */
 @layer utilities {
+
+  /* Primary font */
   .font-futura {
-    font-family: "FuturaPT", sans-serif;
+    font-family: var(--font-primary);
+  }
+
+  /* Heavy Oblique (italic 800) */
+  .font-futura-heavy-italic {
+    font-family: var(--font-primary);
+    font-weight: 800;
+    font-style: italic;
+  }
+
+  /* Condensed variant */
+  .font-futura-condensed {
+    font-family: var(--font-condensed);
+  }
+
+  /* Weight helpers */
+  .font-700 {
+    font-weight: 700;
+  }
+
+  .font-800 {
+    font-weight: 800;
+  }
+
+  /* =========================
+     DROPDOWN STYLES
+     ========================= */
+
+  .dropdown-primary {
+    font-family: var(--font-primary);
+    font-weight: 700;
+    font-size: 1.6rem;
+  }
+
+  .dropdown-default {
+    font-family: var(--font-primary);
+    font-weight: 700;
+    font-size: 1.3rem;
+    letter-spacing: 0.01em;
+  }
+
+  .dropdown-session-type {
+    font-family: var(--font-primary);
+    font-weight: 800;
+    font-size: 1.6rem;
+    color: #d946ef; /* fuchsia */
+  }
+
+  /* =========================
+     CTA BUTTONS
+     ========================= */
+
+  .book-button {
+    @apply inline-flex items-center justify-center
+           px-5 py-2.5
+           text-sm tracking-wider uppercase
+           transition-all duration-150
+           active:scale-95
+           rounded-none;
+
+    font-family: var(--font-primary);
+    font-weight: 800;
+    font-style: italic;
+  }
+
+  .book-button-primary {
+    @apply bg-fuchsia-500 text-white;
+  }
+
+  /* Optional hover polish */
+  .book-button-primary:hover {
+    @apply bg-fuchsia-600;
   }
 }

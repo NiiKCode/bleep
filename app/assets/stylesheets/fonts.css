@@ -1,3 +1,8 @@
+/* =========================
+   Futura PT - Normal Width
+   ========================= */
+
+/* Bold */
 @font-face {
   font-family: "FuturaPT";
   src: url("futura-pt_bold.woff2") format("woff2");
@@ -6,10 +11,33 @@
   font-display: swap;
 }
 
+/* Extra Bold */
+@font-face {
+  font-family: "FuturaPT";
+  src: url("futura-pt_extra-bold.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Heavy Oblique (Extra Bold Italic equivalent) */
 @font-face {
   font-family: "FuturaPT";
   src: url("futura-pt_heavy-oblique.woff2") format("woff2");
   font-weight: 800;
   font-style: italic;
+  font-display: swap;
+}
+
+
+/* =========================
+   Futura PT - Condensed
+   ========================= */
+
+@font-face {
+  font-family: "FuturaPT Condensed";
+  src: url("futura-pt_comd-extra-bold.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
   font-display: swap;
 }

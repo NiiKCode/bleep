@@ -8,6 +8,7 @@ export default {
     extend: {
       fontFamily: {
         futura: ["FuturaPT", "sans-serif"],
+        "futura-condensed": ["FuturaPT Condensed", "sans-serif"],
       },
     },
   },
