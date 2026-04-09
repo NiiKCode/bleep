@@ -32,14 +32,22 @@
       </div>
     </header>
 
-    <!-- Admin nav (only if needed) -->
-    <%# REMOVE this line if you don't want admin UI on homepage %>
-    <%#= render "shared/admin_nav" if current_user&.admin? %>
-
-    <!-- Main content (FULL WIDTH) -->
+    <!-- ✅ MAIN CONTENT -->
     <main class="w-full">
-      <%= yield %>
+
+      <%# If page is full-bleed, skip container %>
+      <% if content_for?(:full_bleed) %>
+        <%= yield %>
+      <% else %>
+        <%= render "shared/narrow_container" do %>
+          <%= yield %>
+        <% end %>
+      <% end %>
+
     </main>
+
+    <!-- ✅ FOOTER -->
+    <%= render "shared/footer" %>
 
   </body>
 </html>

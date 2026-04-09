@@ -1,150 +1,163 @@
-<div class="mb-6">
-  <%= link_to "← Back", sessions_path, class: "underline font-semibold" %>
-</div>
+<%= render "shared/narrow_container" do %>
 
-<h1 class="text-3xl font-extrabold leading-tight">
-  Your booking
-</h1>
+  <div class="py-10">
 
-<%= form_with model: @booking, url: bookings_path, local: true do |f| %>
+    <h1 class="heading-condensed heading-xl">
+      Your booking
+    </h1>
 
-  <%= f.hidden_field :time_slot_id, value: @time_slot.id %>
+    <%= form_with model: @booking, url: bookings_path, local: true do |f| %>
 
-  <!-- SESSION SUMMARY -->
-  <div class="mt-6 space-y-4">
+      <%= f.hidden_field :time_slot_id, value: @time_slot.id %>
 
-    <div>
-      <div class="text-2xl font-extrabold text-fuchsia-600">
-        <%= @session_type.title %>
+      <!-- SESSION SUMMARY -->
+      <div class="mt-6">
+
+          <div class="heading-lg font-extrabold text-fuchsia-600">
+            <%= @session_type.title %>
+          </div>
+
+        <div class="mt-3">
+          <div class="text-lg font-bold">
+            <%= @location.name %>
+          </div>
+
+          <div class="italic text-gray-700">
+            <%= @location.city %>
+          </div>
+        </div>
+
+        <div class="mt-3 space-y-3">
+
+          <div class="text-lg font-bold">
+            <%= @scheduled_session.date.strftime("%a %-d %b, %Y") %>
+          </div>
+
+          <div class="text-lg font-bold">
+            <%= @time_slot.start_time.strftime("%H.%M") %> to
+            <%= @time_slot.end_time.strftime("%H.%M") %>
+          </div>
+
+          <div class="text-lg font-bold">
+            £<%= sprintf("%.2f", @scheduled_session.price) %>
+          </div>
+
+        </div>
       </div>
 
-      <div class="text-lg font-bold">
-        <%= @location.name %>
-      </div>
+      <!-- ADD A FRIEND -->
+      <div class="mt-10 pt-8 border-t" data-controller="friend-select">
 
-      <div class="italic text-gray-700">
-        <%= @location.city %>
-      </div>
-    </div>
+        <!-- HEADER -->
+        <div class="flex items-center justify-between cursor-pointer"
+            data-action="click->friend-select#toggleSection">
 
-    <div class="text-lg font-bold">
-      <%= @scheduled_session.date.strftime("%a %-d %b, %Y") %>
-    </div>
+          <h2 class="heading-lg font-extrabold">
+            Add a friend <span class="text-sm font-normal">(optional)</span>
+          </h2>
 
-    <div class="text-lg font-bold italic">
-      <%= @time_slot.start_time.strftime("%H.%M") %> to
-      <%= @time_slot.end_time.strftime("%H.%M") %>
-    </div>
+          <span data-friend-select-target="chevron" class="text-xl transition">
+            +
+          </span>
+        </div>
 
-    <div class="pt-4 border-t">
-      <div class="text-lg font-bold">
-        £<%= sprintf("%.2f", @scheduled_session.price) %>
-      </div>
-    </div>
+        <!-- COLLAPSIBLE CONTENT -->
+        <div
+          class="mt-6 space-y-6 overflow-hidden transition-all duration-300 ease-in-out max-h-0 opacity-0"
+          data-friend-select-target="section"
+        >
 
-  </div>
+          <!-- SEARCH -->
+          <div>
+            <div>
+              <label class="text-sm font-semibold mb-2 block">
+                Search by email
+              </label>
 
-  <!-- ADD A FRIEND -->
-  <div class="mt-10 pt-8 border-t" data-controller="friend-select">
-
-    <!-- HEADER -->
-    <div class="flex items-center justify-between cursor-pointer"
-         data-action="click->friend-select#toggleSection">
-
-      <h2 class="text-2xl font-extrabold">
-        Add a friend <span class="text-sm font-normal">(optional)</span>
-      </h2>
-
-      <span data-friend-select-target="chevron" class="text-xl transition">
-        +
-      </span>
-    </div>
-
-    <!-- COLLAPSIBLE CONTENT -->
-    <div
-      class="mt-6 space-y-6 overflow-hidden transition-all duration-300 ease-in-out max-h-0 opacity-0"
-      data-friend-select-target="section"
-    >
-
-      <!-- SEARCH -->
-      <div>
-        <label class="text-sm font-semibold">Search by email</label>
-
-        <%= text_field_tag :partner_email,
-              nil,
-              class: "w-full border-b py-2 text-lg focus:outline-none",
-              placeholder: "Start typing email...",
-              data: {
-                action: "input->friend-select#search",
-                friend_select_target: "email"
-              } %>
-      </div>
-
-      <!-- SEARCH RESULTS -->
-      <div data-friend-select-target="results" class="space-y-2"></div>
-
-      <!-- HIDDEN SELECTED USER -->
-      <%= hidden_field_tag :existing_friend_id,
-            nil,
-            data: { friend_select_target: "input" } %>
-
-      <!-- ✅ FRIENDS LIST (PERSISTENT) -->
-      <div class="space-y-3 pt-4 border-t">
-
-        <h3 class="text-lg font-bold">
-          Your friends
-        </h3>
-
-        <div data-friend-select-target="friendsList">
-
-          <% current_user.all_friends.each do |friend| %>
-            <div
-              data-friend-select-target="row"
-              data-friend-id="<%= friend.id %>"
-              data-action="click->friend-select#toggle"
-              class="border rounded-xl p-4 cursor-pointer transition hover:bg-gray-50"
-            >
-
-              <div class="font-semibold">
-                <%= friend.email %>
+              <div class="border rounded-xl px-4 py-3 transition
+                          focus-within:ring-2 focus-within:ring-fuchsia-500
+                          hover:border-gray-400">
+                <%= text_field_tag :partner_email,
+                      nil,
+                      class: "w-full text-lg bg-transparent focus:outline-none",
+                      placeholder: "Start typing email...",
+                      data: {
+                        action: "input->friend-select#search",
+                        friend_select_target: "email"
+                      } %>
               </div>
+            </div>
+          </div>
 
-              <div
-                data-friend-select-target="message"
-                class="hidden text-sm mt-2 text-green-600 font-semibold"
-              >
-                Partner selected
-              </div>
+          <!-- SEARCH RESULTS -->
+          <div data-friend-select-target="results" class="space-y-2"></div>
+
+          <!-- HIDDEN SELECTED USER -->
+          <%= hidden_field_tag :existing_friend_id,
+                nil,
+                data: { friend_select_target: "input" } %>
+
+          <!-- FRIENDS LIST -->
+          <div class="space-y-3 pt-4">
+
+            <h3 class="text-lg font-bold">
+              Your friends
+            </h3>
+
+            <div data-friend-select-target="friendsList">
+
+              <% current_user.all_friends.each do |friend| %>
+                <div
+                  data-friend-select-target="row"
+                  data-friend-id="<%= friend.id %>"
+                  data-action="click->friend-select#toggle"
+                  class="border rounded-xl p-4 cursor-pointer transition hover:bg-gray-50"
+                >
+
+                  <div class="font-semibold">
+                    <%= friend.email %>
+                  </div>
+
+                  <div
+                    data-friend-select-target="message"
+                    class="hidden text-sm mt-2 text-green-600 font-semibold"
+                  >
+                    Partner selected
+                  </div>
+
+                </div>
+              <% end %>
 
             </div>
-          <% end %>
+
+          </div>
 
         </div>
 
       </div>
 
-    </div>
+      <!-- PAYMENT -->
+      <div class="mt-10 pt-8 border-t space-y-6">
 
-  </div>
+        <h2 class="text-2xl font-extrabold">
+          Pay with
+        </h2>
 
-  <!-- PAYMENT -->
-  <div class="mt-10 pt-8 border-t space-y-6">
+        <div class="space-y-4 text-lg">
+          <div class="border-b py-3">card number</div>
+          <div class="border-b py-3">expiration</div>
+          <div class="border-b py-3">cvv</div>
+          <div class="border-b py-3">postcode</div>
+        </div>
 
-    <h2 class="text-2xl font-extrabold">
-      Pay with
-    </h2>
+        <div class="pt-6">
+          <%= f.submit "Confirm and pay",
+                class: "w-full py-4 text-xl font-extrabold rounded-2xl bg-black text-white" %>
+        </div>
 
-    <div class="space-y-4 text-lg">
-      <div class="border-b py-3">card number</div>
-      <div class="border-b py-3">expiration</div>
-      <div class="border-b py-3">cvv</div>
-      <div class="border-b py-3">postcode</div>
-    </div>
+      </div>
 
-    <div class="pt-6">
-      <%= f.submit "Confirm and pay",
-            class: "w-full py-4 text-xl font-extrabold rounded-2xl bg-black text-white" %>
-    </div>
+    <% end %>
 
   </div>
 

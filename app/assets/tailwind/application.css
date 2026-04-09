@@ -1,60 +1,53 @@
 @import "tailwindcss";
 
 /* =========================
-   Fonts (Base Layer)
+   Fonts + Design Tokens
    ========================= */
 @layer base {
 
   /* ---- Futura PT (Normal Width) ---- */
 
-  /* Bold */
   @font-face {
     font-family: "FuturaPT";
-    src: url("/assets/futura-pt_bold.woff2") format("woff2");
+    src: url("futura-pt_bold.woff2") format("woff2");
     font-weight: 700;
     font-style: normal;
     font-display: swap;
   }
 
-  /* Extra Bold */
   @font-face {
     font-family: "FuturaPT";
-    src: url("/assets/futura-pt_extra-bold.woff2") format("woff2");
+    src: url("futura-pt_extra-bold.woff2") format("woff2");
     font-weight: 800;
     font-style: normal;
     font-display: swap;
   }
 
-  /* Extra Bold Italic (Heavy Oblique) */
   @font-face {
     font-family: "FuturaPT";
-    src: url("/assets/futura-pt_heavy-oblique.woff2") format("woff2");
+    src: url("futura-pt_heavy-oblique.woff2") format("woff2");
     font-weight: 800;
     font-style: italic;
     font-display: swap;
   }
 
   /* ---- Futura PT Condensed ---- */
+
   @font-face {
     font-family: "FuturaPT Condensed";
-    src: url("/assets/futura-pt_comd-extra-bold.woff2") format("woff2");
+    src: url("futura-pt_cond-extra-bold.woff2") format("woff2");
     font-weight: 800;
     font-style: normal;
     font-display: swap;
   }
-}
 
+  /* ---- Design Tokens ---- */
 
-/* =========================
-   Design Tokens
-   ========================= */
-@layer base {
   :root {
-    --font-primary: "FuturaPT", sans-serif;
-    --font-condensed: "FuturaPT Condensed", sans-serif;
+    --font-primary: "FuturaPT", "Helvetica Neue", Arial, sans-serif;
+    --font-condensed: "FuturaPT Condensed", "Arial Narrow", sans-serif;
   }
 }
-
 
 /* =========================
    Utilities
@@ -86,15 +79,31 @@
   .font-800 {
     font-weight: 800;
   }
+}
 
-  /* =========================
-     DROPDOWN STYLES
-     ========================= */
+/* =========================
+  Components
+  ========================= */
+@layer components {
 
+  /* Reusable condensed heading */
+  .heading-condensed {
+    font-family: var(--font-condensed);
+    font-weight: 800;
+    letter-spacing: -0.015em;
+    line-height: 1.1;
+  }
+
+  /* Size variants */
+  .heading-xl { @apply text-4xl md:text-6xl; }
+  .heading-lg { @apply text-2xl md:text-3xl; }
+
+  /* Dropdowns */
   .dropdown-primary {
     font-family: var(--font-primary);
     font-weight: 700;
     font-size: 1.6rem;
+    line-height: 1.2;
   }
 
   .dropdown-default {
@@ -102,26 +111,25 @@
     font-weight: 700;
     font-size: 1.3rem;
     letter-spacing: 0.01em;
+    line-height: 1.2;
   }
 
   .dropdown-session-type {
     font-family: var(--font-primary);
     font-weight: 800;
     font-size: 1.6rem;
-    color: #d946ef; /* fuchsia */
+    color: #d946ef;
+    line-height: 1.2;
   }
 
-  /* =========================
-     CTA BUTTONS
-     ========================= */
-
+  /* Buttons */
   .book-button {
     @apply inline-flex items-center justify-center
-           px-5 py-2.5
-           text-sm tracking-wider uppercase
-           transition-all duration-150
-           active:scale-95
-           rounded-none;
+            px-5 py-2.5
+            text-sm tracking-wider uppercase
+            transition-all duration-150
+            active:scale-95
+            rounded-none;
 
     font-family: var(--font-primary);
     font-weight: 800;
@@ -132,7 +140,6 @@
     @apply bg-fuchsia-500 text-white;
   }
 
-  /* Optional hover polish */
   .book-button-primary:hover {
     @apply bg-fuchsia-600;
   }

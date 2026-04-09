@@ -13,6 +13,5 @@ Rails.application.config.assets.paths << Rails.root.join("app/assets/fonts")
 
 # ✅ Precompile font files (important for production)
 Rails.application.config.assets.precompile += %w[
-  *.woff
   *.woff2
 ]
