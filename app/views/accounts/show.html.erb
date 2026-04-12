@@ -1,0 +1,51 @@
+<% if @bookings.any? %>
+
+  <% latest_booking = @bookings.first %>
+
+  <div class="space-y-4">
+
+    <% @bookings.each do |booking| %>
+
+      <div class="border rounded-xl p-4">
+
+        <!-- ✅ HIGHLIGHT LATEST BOOKING -->
+        <% if booking.paid? && booking.created_at > 5.minutes.ago %>
+          <div class="bg-green-50 text-green-700 text-sm font-semibold px-3 py-1 rounded mb-2 inline-block">
+            New booking 🎉
+          </div>
+        <% end %>
+
+        <!-- SESSION TITLE -->
+        <div class="font-bold text-lg">
+          <%= booking.session_type.title %>
+        </div>
+
+        <!-- DATE -->
+        <div class="text-gray-600">
+          <%= booking.scheduled_session.date.strftime("%a %-d %b, %Y") %>
+        </div>
+
+        <!-- TIME -->
+        <div class="text-gray-600">
+          <%= booking.time_slot.start_time.strftime("%H:%M") %> -
+          <%= booking.time_slot.end_time.strftime("%H:%M") %>
+        </div>
+
+        <!-- STATUS -->
+        <div class="mt-2">
+          <span class="<%= booking.paid? ? 'text-green-600' : 'text-gray-500' %> font-semibold">
+            <%= booking.status.capitalize %>
+          </span>
+        </div>
+
+      </div>
+
+    <% end %>
+
+  </div>
+
+<% else %>
+
+  <p>No bookings yet.</p>
+
+<% end %>

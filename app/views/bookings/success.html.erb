@@ -1,0 +1,23 @@
+<h2 class="text-xl font-bold">
+  Payment <%= @payment_status == "paid" ? "successful 🎉" : "processing..." %>
+</h2>
+
+<p>Your booking has been received.</p>
+
+<p>Status: <%= @payment_status %></p>
+
+<% if @payment_status != "paid" %>
+  <p class="text-gray-500 mt-2">
+    Final confirmation may take a few seconds...
+  </p>
+<% end %>
+
+<p class="text-gray-500 mt-2">
+  Redirecting you to your account...
+</p>
+
+<script>
+  setTimeout(function() {
+    window.location.href = "<%= account_path %>";
+  }, 2000);
+</script>

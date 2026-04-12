@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'accounts/show'
   # RailsAdmin
   mount RailsAdmin::Engine => "/rails_admin", as: "rails_admin"
 
@@ -8,10 +9,20 @@ Rails.application.routes.draw do
 
   root "pages#home"
 
+  # ✅ STRIPE WEBHOOK
+  post '/webhooks/stripe', to: 'webhooks#stripe'
+
   resources :sessions, only: [:index]
 
   # ✅ BOOKINGS
-  resources :bookings, only: [:new, :create, :show]
+  resources :bookings, only: [:new, :create, :show] do
+    collection do
+      get :success
+    end
+  end
+
+  # ✅ ACCOUNT PAGE
+  resource :account, only: [:show]
 
   # ✅ FRIENDS (REQUIRED for persistence)
   resources :friends, only: [:create]

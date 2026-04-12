@@ -6,16 +6,28 @@
       Your booking
     </h1>
 
-    <%= form_with model: @booking, url: bookings_path, local: true do |f| %>
+    <%= form_with model: @booking,
+              url: bookings_path,
+              local: true,
+              data: { turbo: false } do |f| %>
+
+      <!-- ✅ ERROR DISPLAY (CORRECT PLACEMENT) -->
+      <% if @booking.errors.any? %>
+        <div class="bg-red-100 p-4 mb-6 rounded-xl">
+          <% @booking.errors.full_messages.each do |msg| %>
+            <div class="text-red-600"><%= msg %></div>
+          <% end %>
+        </div>
+      <% end %>
 
       <%= f.hidden_field :time_slot_id, value: @time_slot.id %>
 
       <!-- SESSION SUMMARY -->
       <div class="mt-6">
 
-          <div class="heading-lg font-extrabold text-fuchsia-600">
-            <%= @session_type.title %>
-          </div>
+        <div class="heading-lg font-extrabold text-fuchsia-600">
+          <%= @session_type.title %>
+        </div>
 
         <div class="mt-3">
           <div class="text-lg font-bold">
@@ -69,23 +81,21 @@
 
           <!-- SEARCH -->
           <div>
-            <div>
-              <label class="text-sm font-semibold mb-2 block">
-                Search by email
-              </label>
+            <label class="text-sm font-semibold mb-2 block">
+              Search by email
+            </label>
 
-              <div class="border rounded-xl px-4 py-3 transition
-                          focus-within:ring-2 focus-within:ring-fuchsia-500
-                          hover:border-gray-400">
-                <%= text_field_tag :partner_email,
-                      nil,
-                      class: "w-full text-lg bg-transparent focus:outline-none",
-                      placeholder: "Start typing email...",
-                      data: {
-                        action: "input->friend-select#search",
-                        friend_select_target: "email"
-                      } %>
-              </div>
+            <div class="border rounded-xl px-4 py-3 transition
+                        focus-within:ring-2 focus-within:ring-fuchsia-500
+                        hover:border-gray-400">
+              <%= text_field_tag :partner_email,
+                    nil,
+                    class: "w-full text-lg bg-transparent focus:outline-none",
+                    placeholder: "Start typing email...",
+                    data: {
+                      action: "input->friend-select#search",
+                      friend_select_target: "email"
+                    } %>
             </div>
           </div>
 
@@ -139,20 +149,12 @@
       <!-- PAYMENT -->
       <div class="mt-10 pt-8 border-t space-y-6">
 
-        <h2 class="text-2xl font-extrabold">
-          Pay with
-        </h2>
-
-        <div class="space-y-4 text-lg">
-          <div class="border-b py-3">card number</div>
-          <div class="border-b py-3">expiration</div>
-          <div class="border-b py-3">cvv</div>
-          <div class="border-b py-3">postcode</div>
-        </div>
-
-        <div class="pt-6">
-          <%= f.submit "Confirm and pay",
-                class: "w-full py-4 text-xl font-extrabold rounded-2xl bg-black text-white" %>
+        <div class="pt-6 relative z-50">
+          <button type="submit"
+            data-disable-with="Processing..."
+            class="w-full py-4 text-xl font-extrabold rounded-2xl bg-black text-white cursor-pointer">
+            Confirm and pay
+          </button>
         </div>
 
       </div>

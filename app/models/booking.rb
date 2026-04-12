@@ -8,6 +8,30 @@ class Booking < ApplicationRecord
              optional: true
 
   # ========================
+  # STATUS
+  # ========================
+  enum status: {
+    pending: "pending",
+    paid: "paid",
+    cancelled: "cancelled"
+  }
+
+  # ========================
+  # DOMAIN HELPERS (🔥 NEW)
+  # ========================
+  def scheduled_session
+    time_slot.scheduled_session
+  end
+
+  def session_type
+    scheduled_session.session_type
+  end
+
+  def price
+    scheduled_session.price
+  end
+
+  # ========================
   # VALIDATIONS
   # ========================
   validates :user_id,

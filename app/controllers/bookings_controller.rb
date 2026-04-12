@@ -1,5 +1,5 @@
 class BookingsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: [:success]
 
   def new
     @time_slot = TimeSlot.includes(scheduled_session: [:location, :session_type])
@@ -13,7 +13,8 @@ class BookingsController < ApplicationController
   end
 
   def create
-    @time_slot = TimeSlot.find(params.require(:booking)[:time_slot_id])
+    @time_slot = TimeSlot.includes(scheduled_session: [:session_type])
+                         .find(params.require(:booking)[:time_slot_id])
 
     @booking = Booking.new(
       user: current_user,
@@ -23,10 +24,16 @@ class BookingsController < ApplicationController
     assign_partner
 
     if @booking.save
-      redirect_to @booking, notice: "Booking confirmed!"
+      session = Payments::StripeCheckoutSessionCreator.new(
+        booking: @booking
+      ).call
+
+      @booking.update!(stripe_session_id: session.id)
+
+      redirect_to session.url, allow_other_host: true
     else
-      redirect_to new_booking_path(time_slot_id: @time_slot.id),
-                  alert: "Could not create booking."
+      flash.now[:alert] = "Could not create booking."
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -34,11 +41,24 @@ class BookingsController < ApplicationController
     @booking = current_user.bookings.find(params[:id])
   end
 
+  # ✅ SUCCESS PAGE (Stripe redirect)
+  def success
+    session = Stripe::Checkout::Session.retrieve(params[:session_id])
+
+    @booking = Booking.find_by(
+      stripe_session_id: session.id
+    )
+
+    @payment_status = session.payment_status # "paid" or "unpaid"
+
+    # Optional safety fallback
+    unless @booking
+      redirect_to root_path, alert: "Booking not found."
+    end
+  end
+
   private
 
-  # ========================
-  # PARTNER ASSIGNMENT (LIVE SEARCH ONLY)
-  # ========================
   def assign_partner
     return unless params[:existing_friend_id].present?
 

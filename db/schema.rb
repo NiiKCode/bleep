@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_03_22_105304) do
+ActiveRecord::Schema[7.1].define(version: 2026_04_12_125735) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -23,7 +23,11 @@ ActiveRecord::Schema[7.1].define(version: 2026_03_22_105304) do
     t.datetime "updated_at", null: false
     t.decimal "score", precision: 4, scale: 1
     t.bigint "partner_user_id"
+    t.string "stripe_session_id"
+    t.string "stripe_payment_intent_id"
     t.index ["partner_user_id"], name: "index_bookings_on_partner_user_id"
+    t.index ["stripe_payment_intent_id"], name: "index_bookings_on_stripe_payment_intent_id"
+    t.index ["stripe_session_id"], name: "index_bookings_on_stripe_session_id"
     t.index ["time_slot_id"], name: "index_bookings_on_time_slot_id"
     t.index ["user_id"], name: "index_bookings_on_user_id"
   end
