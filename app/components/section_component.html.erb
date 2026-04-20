@@ -9,9 +9,10 @@
       <%= @title %>
     </h2>
 
+    <!-- CHEVRON -->
     <svg
       data-collapsible-target="chevron"
-      class="w-5 h-5 transition-transform duration-200"
+      class="w-5 h-5 transition-transform duration-200 <%= 'rotate-180' unless @open %>"
       viewBox="0 0 20 20"
       fill="none"
       stroke="currentColor"
@@ -23,10 +24,11 @@
   </div>
 
   <!-- CONTENT -->
-  <div class="mt-6 space-y-6"
-       data-collapsible-target="section">
-
+  <div
+    data-collapsible-target="section"
+    class="mt-6 space-y-6 <%= 'hidden' unless @open %>"
+  >
     <%= content %>
-
   </div>
+
 </div>

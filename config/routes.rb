@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   get 'accounts/show'
+
   # RailsAdmin
   mount RailsAdmin::Engine => "/rails_admin", as: "rails_admin"
 
@@ -19,12 +20,18 @@ Rails.application.routes.draw do
     collection do
       get :success
     end
+
+    # ✅ ADD THIS BLOCK
+    member do
+      get :edit_score
+      patch :update_score
+    end
   end
 
   # ✅ ACCOUNT PAGE
   resource :account, only: [:show]
 
-  # ✅ FRIENDS (REQUIRED for persistence)
+  # ✅ FRIENDS
   resources :friends, only: [:create]
 
   # ✅ LIVE USER SEARCH

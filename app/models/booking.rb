@@ -13,7 +13,8 @@ class Booking < ApplicationRecord
   enum status: {
     pending: "pending",
     paid: "paid",
-    cancelled: "cancelled"
+    cancelled: "cancelled",
+    completed: "completed"
   }
 
   # ========================
@@ -31,6 +32,14 @@ class Booking < ApplicationRecord
     scheduled_session.price
   end
 
+  def session_date
+    scheduled_session.date
+  end
+
+  def completed?
+    time_slot.end_time < Time.current
+  end
+
   # ========================
   # VALIDATIONS
   # ========================
@@ -42,6 +51,11 @@ class Booking < ApplicationRecord
             allow_nil: true
 
   validate :time_slot_has_capacity
+
+  # ========================
+  # SCOPES (useful for graphs)
+  # ========================
+  scope :with_scores, -> { where.not(score: nil) }
 
   private
 

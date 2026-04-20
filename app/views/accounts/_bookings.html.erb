@@ -2,7 +2,7 @@
 
   <% @bookings.each do |booking| %>
 
-    <div class="flex justify-between items-center">
+    <div class="flex justify-between items-center py-2 border-b">
 
       <!-- LEFT -->
       <div class="space-y-1">
@@ -11,31 +11,53 @@
         </div>
 
         <div class="text-sm text-gray-600">
-          <%= booking.scheduled_session.date.strftime("%a %-d %b") %><br>
+          <%= booking.session_date.strftime("%a %-d %b") %><br>
           <%= booking.time_slot.start_time.strftime("%H:%M") %> to
           <%= booking.time_slot.end_time.strftime("%H:%M") %>
         </div>
       </div>
 
       <!-- RIGHT -->
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-4">
 
-        <!-- initials -->
+        <!-- initials (solo or pair) -->
         <div class="flex gap-1">
           <span class="font-bold">
-            <%= current_user.name.first.upcase %>
+            <%= current_user.initials %>
           </span>
 
           <% if booking.partner_user %>
             <span class="font-bold">
-              <%= booking.partner_user.name.first.upcase %>
+              <%= booking.partner_user.initials %>
             </span>
           <% end %>
         </div>
 
-        <!-- add score -->
-        <% if booking.status == "completed" %>
-          <%= link_to "Add", "#", class: "font-bold underline" %>
+        <!-- score / action -->
+        <% if booking.completed? %>
+
+          <% if booking.score.present? %>
+            <div class="flex items-center gap-2">
+              <span class="font-bold">
+                <%= booking.score %>
+              </span>
+
+              <%= link_to "Edit",
+                  edit_score_booking_path(booking),
+                  class: "underline text-sm text-gray-600" %>
+            </div>
+
+          <% else %>
+            <%= link_to "Add",
+                edit_score_booking_path(booking),
+                class: "font-bold underline" %>
+          <% end %>
+
+        <% else %>
+          <!-- Optional: upcoming session label -->
+          <span class="text-xs text-gray-400">
+            Upcoming
+          </span>
         <% end %>
 
       </div>

@@ -1,43 +1,17 @@
-<div class="border-t pt-6"
-     data-controller="collapsible">
+<%= render SectionComponent.new(title: "Personal", open: false) do %>
 
-  <!-- HEADER -->
-  <div class="flex items-center justify-between cursor-pointer"
-       data-action="click->collapsible#toggle">
-
-    <h2 class="heading-lg font-extrabold">Personal</h2>
-
-    <!-- CHEVRON -->
-    <svg
-      data-collapsible-target="chevron"
-      class="w-5 h-5 transition-transform duration-200"
-      viewBox="0 0 20 20"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2.5"
-    >
-      <path d="M5 7l5 5 5-5" />
-    </svg>
-
+  <div class="flex justify-between items-center">
+    <div class="font-semibold text-lg">
+      <%= current_user.name %>
+    </div>
+    <%= link_to "Edit", edit_user_registration_path, class: "font-bold underline" %>
   </div>
 
-  <!-- CONTENT -->
-  <div class="mt-6 space-y-6"
-       data-collapsible-target="section">
-
-    <div class="flex justify-between items-center">
-      <div class="font-semibold text-lg">
-        <%= current_user.name %>
-      </div>
-      <%= link_to "Edit", edit_user_registration_path, class: "font-bold underline" %>
+  <div class="flex justify-between items-center">
+    <div class="text-gray-600 text-lg">
+      <%= current_user.email %>
     </div>
-
-    <div class="flex justify-between items-center">
-      <div class="text-gray-600 text-lg">
-        <%= current_user.email %>
-      </div>
-      <%= link_to "Edit", edit_user_registration_path, class: "font-bold underline" %>
-    </div>
-
+    <%= link_to "Edit", edit_user_registration_path, class: "font-bold underline" %>
   </div>
-</div>
+
+<% end %>

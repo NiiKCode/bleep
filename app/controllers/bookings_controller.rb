@@ -41,7 +41,31 @@ class BookingsController < ApplicationController
     @booking = current_user.bookings.find(params[:id])
   end
 
-  # ✅ SUCCESS PAGE (Stripe redirect)
+  # ========================
+  # ✅ SCORE ACTIONS
+  # ========================
+  def edit_score
+    @booking = current_user.bookings.find(params[:id])
+  end
+
+  def update_score
+    @booking = current_user.bookings.find(params[:id])
+
+    unless @booking.completed?
+      redirect_to account_path, alert: "Session not completed"
+      return
+    end
+
+    if @booking.update(score_params)
+      redirect_to account_path, notice: "Score saved"
+    else
+      render :edit_score, status: :unprocessable_entity
+    end
+  end
+
+  # ========================
+  # STRIPE SUCCESS
+  # ========================
   def success
     session = Stripe::Checkout::Session.retrieve(params[:session_id])
 
@@ -49,9 +73,8 @@ class BookingsController < ApplicationController
       stripe_session_id: session.id
     )
 
-    @payment_status = session.payment_status # "paid" or "unpaid"
+    @payment_status = session.payment_status
 
-    # Optional safety fallback
     unless @booking
       redirect_to root_path, alert: "Booking not found."
     end
@@ -63,5 +86,9 @@ class BookingsController < ApplicationController
     return unless params[:existing_friend_id].present?
 
     @booking.partner_user = User.find_by(id: params[:existing_friend_id])
+  end
+
+  def score_params
+    params.require(:booking).permit(:score)
   end
 end

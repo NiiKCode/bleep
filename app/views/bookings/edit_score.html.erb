@@ -1,0 +1,12 @@
+<div class="p-6">
+  <h2 class="text-xl font-bold mb-4">Add Score</h2>
+
+  <%= form_with model: @booking, url: update_score_booking_path(@booking) do |f| %>
+    <div class="mb-4">
+      <%= f.label :score, class: "block mb-1" %>
+      <%= f.number_field :score, step: 0.1, class: "border p-2 w-full" %>
+    </div>
+
+    <%= f.submit "Save", class: "bg-black text-white px-4 py-2 rounded" %>
+  <% end %>
+</div>
