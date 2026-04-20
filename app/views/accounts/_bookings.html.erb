@@ -1,0 +1,47 @@
+<%= render SectionComponent.new(title: "Bookings + Scores") do %>
+
+  <% @bookings.each do |booking| %>
+
+    <div class="flex justify-between items-center">
+
+      <!-- LEFT -->
+      <div class="space-y-1">
+        <div class="font-semibold">
+          <%= booking.session_type.title %>
+        </div>
+
+        <div class="text-sm text-gray-600">
+          <%= booking.scheduled_session.date.strftime("%a %-d %b") %><br>
+          <%= booking.time_slot.start_time.strftime("%H:%M") %> to
+          <%= booking.time_slot.end_time.strftime("%H:%M") %>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="flex items-center gap-3">
+
+        <!-- initials -->
+        <div class="flex gap-1">
+          <span class="font-bold">
+            <%= current_user.name.first.upcase %>
+          </span>
+
+          <% if booking.partner_user %>
+            <span class="font-bold">
+              <%= booking.partner_user.name.first.upcase %>
+            </span>
+          <% end %>
+        </div>
+
+        <!-- add score -->
+        <% if booking.status == "completed" %>
+          <%= link_to "Add", "#", class: "font-bold underline" %>
+        <% end %>
+
+      </div>
+
+    </div>
+
+  <% end %>
+
+<% end %>

@@ -5,9 +5,7 @@ export default class extends Controller {
     "email",
     "results",
     "friendsList",
-    "input",
-    "section",
-    "chevron"
+    "input"
   ]
 
   connect() {
@@ -76,7 +74,6 @@ export default class extends Controller {
 
       const data = await response.json()
 
-      // Prevent duplicates in UI
       const existing = this.friendsListTarget.querySelector(
         `[data-friend-id='${data.id}']`
       )
@@ -116,7 +113,6 @@ export default class extends Controller {
     `
 
     this.friendsListTarget.prepend(row)
-
     row.click()
   }
 
@@ -125,7 +121,6 @@ export default class extends Controller {
   // ========================
   toggle(event) {
     const row = event.currentTarget
-
     const friendId = row.dataset.friendId
 
     if (this.inputTarget.value === friendId) {
@@ -153,22 +148,5 @@ export default class extends Controller {
     })
 
     this.inputTarget.value = ""
-  }
-
-  // ========================
-  // COLLAPSE
-  // ========================
-  toggleSection() {
-    const section = this.sectionTarget
-
-    if (section.classList.contains("max-h-0")) {
-      section.classList.remove("max-h-0", "opacity-0")
-      section.classList.add("max-h-[1000px]", "opacity-100")
-      this.chevronTarget.innerText = "–"
-    } else {
-      section.classList.remove("max-h-[1000px]", "opacity-100")
-      section.classList.add("max-h-0", "opacity-0")
-      this.chevronTarget.innerText = "+"
-    }
   }
 }

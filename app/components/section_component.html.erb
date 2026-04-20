@@ -1,0 +1,32 @@
+<div class="border-t pt-6"
+     data-controller="collapsible">
+
+  <!-- HEADER -->
+  <div class="flex items-center justify-between cursor-pointer"
+       data-action="click->collapsible#toggle">
+
+    <h2 class="heading-lg font-extrabold">
+      <%= @title %>
+    </h2>
+
+    <svg
+      data-collapsible-target="chevron"
+      class="w-5 h-5 transition-transform duration-200"
+      viewBox="0 0 20 20"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.5"
+    >
+      <path d="M5 7l5 5 5-5" />
+    </svg>
+
+  </div>
+
+  <!-- CONTENT -->
+  <div class="mt-6 space-y-6"
+       data-collapsible-target="section">
+
+    <%= content %>
+
+  </div>
+</div>

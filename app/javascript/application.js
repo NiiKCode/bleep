@@ -1,29 +1,26 @@
-// app/javascript/application.js
 import "@hotwired/turbo-rails"
 import "controllers"
-import "bootstrap" // loads and attaches bootstrap to window
+import "bootstrap"
 
-document.addEventListener("DOMContentLoaded", () => {
-  const modalEl = document.getElementById("confirmDeleteModal");
-  const deleteForm = document.getElementById("deleteForm");
+document.addEventListener("click", (event) => {
+  const el = event.target.closest(".delete-link")
+  if (!el) return
 
-  if (!modalEl || !deleteForm) return;
+  const modalEl = document.getElementById("confirmDeleteModal")
+  const deleteForm = document.getElementById("deleteForm")
 
-  document.querySelectorAll(".delete-link").forEach((el) => {
-    el.addEventListener("click", (event) => {
-      event.preventDefault();
+  if (!modalEl || !deleteForm) return
 
-      const url = el.dataset.deleteUrl;
-      if (!url) {
-        console.warn("Missing data-delete-url on", el);
-        return;
-      }
+  event.preventDefault()
 
-      deleteForm.setAttribute("action", url);
+  const url = el.dataset.deleteUrl
+  if (!url) {
+    console.warn("Missing data-delete-url on", el)
+    return
+  }
 
-      // ✅ Use global bootstrap reference (works with Importmap)
-      const modal = window.bootstrap.Modal.getOrCreateInstance(modalEl);
-      modal.show();
-    });
-  });
-});
+  deleteForm.setAttribute("action", url)
+
+  const modal = window.bootstrap.Modal.getOrCreateInstance(modalEl)
+  modal.show()
+})
