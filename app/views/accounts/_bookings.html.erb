@@ -1,69 +1,143 @@
-<%= render SectionComponent.new(title: "Bookings + Scores") do %>
+<% upcoming_bookings = @upcoming_bookings %>
 
-  <% @bookings.each do |booking| %>
+<% completed_bookings = @completed_bookings
+  .sort_by(&:session_date)
+  .reverse
+  .first(20)
+%>
 
-    <div class="flex justify-between items-center py-2 border-b">
+<% grouped_completed = completed_bookings.group_by { |b| b.session_type.title } %>
 
-      <!-- LEFT -->
-      <div class="space-y-1">
-        <div class="font-semibold">
-          <%= booking.session_type.title %>
+
+<!-- ========================= -->
+<!-- UPCOMING -->
+<!-- ========================= -->
+<%= render SectionComponent.new(title: "Upcoming", open: false) do %>
+
+  <% if upcoming_bookings.any? %>
+
+    <% upcoming_bookings.each do |booking| %>
+      <div class="flex justify-between items-center">
+
+        <!-- LEFT -->
+        <div class="space-y-1">
+          <div class="font-semibold">
+            <%= booking.session_type.title %>
+          </div>
+
+          <div class="text-sm text-gray-600">
+            <%= booking.session_date.strftime("%a %-d %b") %><br>
+            <%= booking.time_slot.start_time.strftime("%H:%M") %> to
+            <%= booking.time_slot.end_time.strftime("%H:%M") %>
+          </div>
         </div>
 
-        <div class="text-sm text-gray-600">
-          <%= booking.session_date.strftime("%a %-d %b") %><br>
-          <%= booking.time_slot.start_time.strftime("%H:%M") %> to
-          <%= booking.time_slot.end_time.strftime("%H:%M") %>
+        <!-- RIGHT -->
+        <div class="flex items-center gap-4">
+          <div class="flex gap-1">
+            <span class="font-bold"><%= current_user.initials %></span>
+            <% if booking.partner_user %>
+              <span class="font-bold"><%= booking.partner_user.initials %></span>
+            <% end %>
+          </div>
+
+          <span class="text-xs text-gray-400">Upcoming</span>
         </div>
+
       </div>
+    <% end %>
 
-      <!-- RIGHT -->
-      <div class="flex items-center gap-4">
+  <% else %>
+    <div class="text-sm text-gray-400 py-2">No upcoming sessions</div>
+  <% end %>
 
-        <!-- initials (solo or pair) -->
-        <div class="flex gap-1">
-          <span class="font-bold">
-            <%= current_user.initials %>
-          </span>
+<% end %>
 
-          <% if booking.partner_user %>
-            <span class="font-bold">
-              <%= booking.partner_user.initials %>
-            </span>
-          <% end %>
+
+<!-- ========================= -->
+<!-- COMPLETED (GROUPED) -->
+<!-- ========================= -->
+<%= render SectionComponent.new(title: "Add score (to latest completed)", open: true) do %>
+
+  <% if grouped_completed.any? %>
+
+    <% grouped_completed.each do |session_title, bookings| %>
+
+      <!-- 🔽 Sub-group collapsible -->
+      <div data-controller="collapsible" class="py-2">
+
+        <!-- Header -->
+        <div
+          class="flex justify-between items-center cursor-pointer"
+          data-action="click->collapsible#toggle"
+        >
+          <div class="font-semibold">
+            <%= session_title %>
+          </div>
+
+          <div
+            data-collapsible-target="chevron"
+            class="transition-transform"
+          >
+            ▼
+          </div>
         </div>
 
-        <!-- score / action -->
-        <% if booking.completed? %>
+        <!-- Content -->
+        <div
+          data-collapsible-target="section"
+          class="mt-2 space-y-2 hidden"
+        >
 
-          <% if booking.score.present? %>
-            <div class="flex items-center gap-2">
-              <span class="font-bold">
-                <%= booking.score %>
-              </span>
+          <% bookings.each do |booking| %>
+            <div class="flex justify-between items-center py-2">
 
-              <%= link_to "Edit",
-                  edit_score_booking_path(booking),
-                  class: "underline text-sm text-gray-600" %>
+              <!-- LEFT -->
+              <div class="space-y-1">
+                <div class="text-sm text-gray-600">
+                  <%= booking.session_date.strftime("%a %-d %b") %><br>
+                  <%= booking.time_slot.start_time.strftime("%H:%M") %> to
+                  <%= booking.time_slot.end_time.strftime("%H:%M") %>
+                </div>
+              </div>
+
+              <!-- RIGHT -->
+              <div class="flex items-center gap-4">
+
+                <div class="flex gap-1">
+                  <span class="font-bold"><%= current_user.initials %></span>
+                  <% if booking.partner_user %>
+                    <span class="font-bold"><%= booking.partner_user.initials %></span>
+                  <% end %>
+                </div>
+
+                <% if booking.score.present? %>
+                  <div class="flex items-center gap-2">
+                    <span class="font-bold"><%= booking.score %></span>
+
+                    <%= link_to "Edit",
+                        edit_score_booking_path(booking),
+                        class: "underline text-sm text-gray-600" %>
+                  </div>
+                <% else %>
+                  <%= link_to "Add",
+                      edit_score_booking_path(booking),
+                      class: "font-bold underline" %>
+                <% end %>
+
+              </div>
+
             </div>
-
-          <% else %>
-            <%= link_to "Add",
-                edit_score_booking_path(booking),
-                class: "font-bold underline" %>
           <% end %>
 
-        <% else %>
-          <!-- Optional: upcoming session label -->
-          <span class="text-xs text-gray-400">
-            Upcoming
-          </span>
-        <% end %>
+        </div>
 
       </div>
 
-    </div>
+    <% end %>
 
+  <% else %>
+    <div class="text-sm text-gray-400 py-2">No completed sessions</div>
   <% end %>
 
 <% end %>

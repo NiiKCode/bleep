@@ -50,50 +50,62 @@
 
   <%= render "shared/narrow_container" do %>
 
-      <%= form_with url: root_path, method: :get, local: true do %>
+    <%= form_with url: root_path, method: :get, local: true do %>
 
-        <div class="space-y-0.5">
+      <div class="space-y-0.5">
 
-          <%= render DropdownComponent.new(
-            name: :city,
-            options: @cities,
-            selected: @selected_city || @cities.first
-          ) %>
+        <!-- CITY -->
+        <%= render DropdownComponent.new(
+          name: :city,
+          options: @cities.to_a.compact,
+          selected: @selected_city || @cities&.first || ""
+        ) %>
 
-          <%= render DropdownComponent.new(
-            name: :location_id,
-            options: @locations,
-            selected: @locations.find { |l| l.id == @selected_location_id } || @locations.first,
-            value_method: :id,
-            label_method: :name
-          ) %>
+        <!-- LOCATION -->
+        <%= render DropdownComponent.new(
+          name: :location_id,
+          options: @locations.to_a.compact,
+          selected: @locations&.find { |l| l.id == @selected_location_id } || @locations&.first || "",
+          value_method: :id,
+          label_method: :name
+        ) %>
 
-          <%= render DropdownComponent.new(
-            name: :date,
-            options: @available_dates.map do |d|
-              ["#{d.strftime('%a')} #{d.day.ordinalize} #{d.strftime('%b %Y')}", d]
-            end,
-            selected: @available_dates.find { |d| d == @selected_date } || @available_dates.first
-          ) %>
+        <!-- DATE -->
+        <%= render DropdownComponent.new(
+          name: :date,
+          options: @available_dates.to_a.compact.map do |d|
+            ["#{d.strftime('%a')} #{d.day.ordinalize} #{d.strftime('%b %Y')}", d]
+          end,
+          selected: @available_dates&.find { |d| d == @selected_date } || @available_dates&.first || ""
+        ) %>
 
-          <%= render DropdownComponent.new(
-            name: :session_type_id,
-            options: @available_session_types,
-            selected: @available_session_types.find { |s| s.id == @selected_session_type_id } || @available_session_types.first,
-            value_method: :id,
-            label_method: :title
-          ) %>
+        <!-- SESSION TYPE -->
+        <%= render DropdownComponent.new(
+          name: :session_type_id,
+          options: @available_session_types.to_a.compact,
+          selected: @available_session_types&.find { |s| s.id == @selected_session_type_id } || @available_session_types&.first || "",
+          value_method: :id,
+          label_method: :title
+        ) %>
 
-        </div>
+      </div>
 
-      <% end %>
+    <% end %>
 
-      <!-- Results -->
-      <div class="pt-4 space-y-3">
+    <!-- RESULTS -->
+    <div class="pt-4 space-y-3">
+
+      <% if @scheduled_sessions.present? %>
         <%= render "sessions/results",
             scheduled_sessions: @scheduled_sessions,
             time_slots: @time_slots %>
-      </div>
+      <% else %>
+        <div class="text-center text-gray-500 py-6">
+          No sessions available for selected filters
+        </div>
+      <% end %>
+
+    </div>
 
   <% end %>
 

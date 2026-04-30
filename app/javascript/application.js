@@ -2,6 +2,7 @@ import "@hotwired/turbo-rails"
 import "controllers"
 import "bootstrap"
 
+// Delete modal logic (keep this)
 document.addEventListener("click", (event) => {
   const el = event.target.closest(".delete-link")
   if (!el) return
