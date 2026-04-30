@@ -1,0 +1,18 @@
+<% chart_data.each do |session_type, competitors| %>
+
+  <div class="mt-10">
+    <h2 class="text-lg font-bold mb-4">
+      <%= session_type %>
+    </h2>
+
+    <!-- ✅ Fixed-height container controls chart size -->
+    <div class="relative w-full h-64">
+      <canvas
+        data-controller="chart"
+        data-chart-data-value='<%= competitors.to_json %>'
+      ></canvas>
+    </div>
+
+  </div>
+
+<% end %>
