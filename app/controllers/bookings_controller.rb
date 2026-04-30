@@ -1,24 +1,16 @@
 class BookingsController < ApplicationController
   before_action :authenticate_user!, except: [:success]
+  before_action :set_time_slot_and_dependencies, only: [:new, :create]
 
   def new
-    @time_slot = TimeSlot.includes(scheduled_session: [:location, :session_type])
-                         .find(params[:time_slot_id])
-
-    @scheduled_session = @time_slot.scheduled_session
-    @location = @scheduled_session.location
-    @session_type = @scheduled_session.session_type
-
     @booking = Booking.new(time_slot: @time_slot)
   end
 
   def create
-    @time_slot = TimeSlot.includes(scheduled_session: [:session_type])
-                         .find(params.require(:booking)[:time_slot_id])
-
     @booking = Booking.new(
       user: current_user,
-      time_slot: @time_slot
+      time_slot: @time_slot,
+      status: "pending" # explicit
     )
 
     assign_partner
@@ -42,7 +34,7 @@ class BookingsController < ApplicationController
   end
 
   # ========================
-  # ✅ SCORE ACTIONS
+  # SCORE ACTIONS
   # ========================
   def edit_score
     @booking = current_user.bookings.find(params[:id])
@@ -64,7 +56,7 @@ class BookingsController < ApplicationController
   end
 
   # ========================
-  # STRIPE SUCCESS
+  # STRIPE SUCCESS (🔥 FIXED)
   # ========================
   def success
     session = Stripe::Checkout::Session.retrieve(params[:session_id])
@@ -73,14 +65,38 @@ class BookingsController < ApplicationController
       stripe_session_id: session.id
     )
 
-    @payment_status = session.payment_status
-
     unless @booking
       redirect_to root_path, alert: "Booking not found."
+      return
     end
+
+    # ✅ THIS IS THE KEY FIX
+    if session.payment_status == "paid"
+      @booking.update!(
+        status: "paid"
+      )
+    end
+
+    @payment_status = session.payment_status
   end
 
   private
+
+  def set_time_slot_and_dependencies
+    time_slot_id =
+      params[:time_slot_id] ||
+      params.dig(:booking, :time_slot_id)
+
+    @time_slot = TimeSlot
+      .includes(scheduled_session: [:location, :session_type])
+      .find_by(id: time_slot_id)
+
+    return unless @time_slot
+
+    @scheduled_session = @time_slot.scheduled_session
+    @location = @scheduled_session&.location
+    @session_type = @scheduled_session&.session_type
+  end
 
   def assign_partner
     return unless params[:existing_friend_id].present?
