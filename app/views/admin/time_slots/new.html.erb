@@ -1,19 +1,37 @@
-<h1>Add Time Slot for <%= @scheduled_session.session_type.title %> (<%= @scheduled_session.date.strftime("%d %b %Y") %>)</h1>
+<h1>
+  Add Time Slot for <%= @scheduled_session.session_type.title %>
+  (<%= @scheduled_session.date.strftime("%d %b %Y") %>)
+</h1>
+
+<p class="text-sm text-gray-600 mb-3">
+  Date is fixed to session date: <strong><%= @scheduled_session.date %></strong>
+</p>
 
 <%= form_with model: [:admin, @scheduled_session, @time_slot], local: true do |f| %>
+
+  <% if @time_slot.errors.any? %>
+    <div class="alert alert-danger">
+      <ul>
+        <% @time_slot.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
   <div class="field">
     <%= f.label :start_time %>
-    <%= f.time_field :start_time %>
+    <%= f.time_field :start_time, required: true %>
   </div>
 
   <div class="field">
     <%= f.label :end_time %>
-    <%= f.time_field :end_time %>
+    <%= f.time_field :end_time, required: true %>
   </div>
 
   <div class="field">
     <%= f.label :capacity %>
-    <%= f.number_field :capacity, min: 1 %>
+    <%= f.number_field :capacity, min: 1, required: true %>
   </div>
 
   <%= f.submit "Add Time Slot", class: "btn btn-primary" %>

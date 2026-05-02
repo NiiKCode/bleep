@@ -3,15 +3,13 @@ class TimeSlot < ApplicationRecord
   has_many :bookings, dependent: :destroy
 
   # =========================================
-  # 🔥 CRITICAL FIX: SYNC DATE + TIME
+  # 🔒 ENFORCE CONSISTENCY
   # =========================================
   before_validation :align_with_session_date
 
-  # =========================================
-  # VALIDATIONS
-  # =========================================
   validates :start_time, :end_time, presence: true
   validate :end_after_start
+  validate :must_match_session_date
 
   # =========================================
   # DOMAIN HELPERS
@@ -26,20 +24,30 @@ class TimeSlot < ApplicationRecord
 
   private
 
-  # =========================================
-  # 🔥 THIS FIXES YOUR BUG
-  # =========================================
+  # 🔥 Force date alignment
   def align_with_session_date
     return unless scheduled_session&.date
     return unless start_time.present? && end_time.present?
 
-    session_date = scheduled_session.date
+    date = scheduled_session.date
 
-    self.start_time = combine_date_and_time(session_date, start_time)
-    self.end_time   = combine_date_and_time(session_date, end_time)
+    self.start_time = combine(date, start_time)
+    self.end_time   = combine(date, end_time)
   end
 
-  def combine_date_and_time(date, time)
+  # 🔒 HARD VALIDATION (prevents bad data)
+  def must_match_session_date
+    return unless scheduled_session&.date
+    return unless start_time && end_time
+
+    session_date = scheduled_session.date
+
+    if start_time.to_date != session_date || end_time.to_date != session_date
+      errors.add(:base, "Time slots must match the session date")
+    end
+  end
+
+  def combine(date, time)
     Time.zone.local(
       date.year,
       date.month,

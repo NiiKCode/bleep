@@ -3,7 +3,7 @@
   <% if user_signed_in? %>
 
     <!-- Clean initials (no circle) -->
-    <%= link_to edit_user_registration_path,
+    <%= link_to account_path,
           class: "font-bold text-lg hover:opacity-70 transition" do %>
       <%= current_user.initials %>
     <% end %>

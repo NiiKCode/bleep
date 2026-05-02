@@ -5,12 +5,12 @@ class ApplicationController < ActionController::Base
 
   protected
 
-  # Store the last visited URL so Devise can redirect back after login
+  # Store last visited URL
   def store_user_location!
     store_location_for(:user, request.fullpath)
   end
 
-  # Only store navigational GET requests
+  # Only store safe GET requests
   def storable_location?
     request.get? &&
       is_navigational_format? &&
@@ -18,11 +18,12 @@ class ApplicationController < ActionController::Base
       !request.xhr?
   end
 
-  # After login, redirect user back to where they were trying to go
+  # Redirect after login
   def after_sign_in_path_for(resource)
     stored_location_for(resource) || super
   end
 
+  # Redirect after logout
   def after_sign_out_path_for(resource_or_scope)
     root_path
   end
@@ -31,9 +32,9 @@ class ApplicationController < ActionController::Base
 
   def layout_by_resource
     if devise_controller?
-      "application" # login, signup, password reset, etc.
+      "application"
     elsif controller_path.start_with?("rails_admin")
-      "rails_admin/custom" # your custom admin layout
+      "rails_admin/custom"
     else
       "application"
     end

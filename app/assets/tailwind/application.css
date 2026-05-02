@@ -97,6 +97,7 @@
   /* Size variants */
   .heading-xl { @apply text-4xl md:text-6xl; }
   .heading-lg { @apply text-2xl md:text-3xl; }
+  .heading-md { @apply text-3xl md:text-4xl; }
 
   /* Dropdowns */
   .dropdown-primary {

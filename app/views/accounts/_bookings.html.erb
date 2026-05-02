@@ -12,7 +12,7 @@
 <!-- ========================= -->
 <!-- UPCOMING -->
 <!-- ========================= -->
-<%= render SectionComponent.new(title: "Upcoming", open: false) do %>
+<%= render SectionComponent.new(title: "Upcoming", open: true) do %>
 
   <% if upcoming_bookings.any? %>
 
@@ -57,7 +57,7 @@
 <!-- ========================= -->
 <!-- COMPLETED (GROUPED) -->
 <!-- ========================= -->
-<%= render SectionComponent.new(title: "Add score (to latest completed)", open: true) do %>
+<%= render SectionComponent.new(title: "Add score", open: true) do %>
 
   <% if grouped_completed.any? %>
 
@@ -137,7 +137,7 @@
     <% end %>
 
   <% else %>
-    <div class="text-sm text-gray-400 py-2">No completed sessions</div>
+    <div class="text-sm text-gray-700 py-2">No completed sessions</div>
   <% end %>
 
 <% end %>

@@ -7,26 +7,32 @@
         <%= button_to destroy_user_session_path,
               method: :delete,
               data: { turbo: false },
-              class: "flex items-center gap-3 text-black hover:opacity-60 transition" do %>
+              title: "Logout",
+              class: "flex justify-center items-center hover:opacity-60 transition cursor-pointer" do %>
 
-          <!-- Logout Icon -->
           <svg xmlns="http://www.w3.org/2000/svg"
-               class="w-6 h-6"
-               fill="none"
-               viewBox="0 0 24 24"
-               stroke="currentColor"
-               stroke-width="2">
+              class="w-7 h-7"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2">
 
-            <path d="M4 4v16M4 4h6M4 20h6"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"/>
+            <!-- Arrow (LEFT, in front) -->
+            <path stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M11 7l-5 5 5 5" />
 
-            <path d="M14 8l4 4-4 4M18 12H8"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"/>
+            <path stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 12h8" />
+
+            <!-- Door (flipped to face LEFT, positioned to the RIGHT with spacing) -->
+            <path stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M23 3h-4v18h4" />
+
           </svg>
 
-          <span class="text-base font-medium">Logout</span>
         <% end %>
       </div>
     <% end %>

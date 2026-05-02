@@ -10,10 +10,12 @@ class Admin::TimeSlotsController < ApplicationController
 
   def create
     @time_slot = @scheduled_session.time_slots.new(time_slot_params)
+
     if @time_slot.save
       redirect_to schedule_admin_location_path(@scheduled_session.location),
                   notice: "Time slot added successfully."
     else
+      flash.now[:alert] = @time_slot.errors.full_messages.join(", ")
       render :new, status: :unprocessable_entity
     end
   end
@@ -25,6 +27,7 @@ class Admin::TimeSlotsController < ApplicationController
       redirect_to schedule_admin_location_path(@scheduled_session.location),
                   notice: "Time slot updated successfully."
     else
+      flash.now[:alert] = @time_slot.errors.full_messages.join(", ")
       render :edit, status: :unprocessable_entity
     end
   end
