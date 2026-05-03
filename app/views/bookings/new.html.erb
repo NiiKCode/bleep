@@ -27,12 +27,18 @@
         <%= @session_type.title %>
       </div>
 
+      <% if @session_type.description.present? %>
+        <div class="mt-2 text-gray-600 text-[0.95rem] leading-relaxed max-w-md">
+          <%= @session_type.description %>
+        </div>
+      <% end %>
+
       <div class="mt-3">
         <div class="text-lg font-bold">
           <%= @location.name %>
         </div>
 
-        <div class="italic text-gray-700">
+        <div class="italic font-bold">
           <%= @location.city %>
         </div>
       </div>
@@ -56,10 +62,10 @@
     </div>
 
     <!-- ADD A FRIEND (USING SECTION COMPONENT) -->
-    <div class="mt-10 pt-8">
+    <div class="mt-4 pt-1">
 
       <%= render SectionComponent.new(
-            title: 'Add a friend <span class="text-sm font-normal">(optional)</span>'.html_safe
+            title: 'Partner with a friend <span class="text-sm font-normal">(optional)</span>'.html_safe
           ) do %>
 
         <div data-controller="friend-select">
@@ -85,7 +91,7 @@
           </div>
 
           <!-- RESULTS -->
-          <div data-friend-select-target="results" class="space-y-2"></div>
+          <div data-friend-select-target="results" class="space-y-1"></div>
 
           <!-- HIDDEN FIELD -->
           <%= hidden_field_tag :existing_friend_id,
@@ -96,17 +102,19 @@
           <div class="space-y-3 pt-4">
 
             <h3 class="text-lg font-bold">
-              Your friends
+              Add friend
             </h3>
 
-            <div data-friend-select-target="friendsList">
-
+            <div
+              data-friend-select-target="friendsList"
+              class="space-y-2"
+            >
               <% current_user.all_friends.each do |friend| %>
                 <div
                   data-friend-select-target="row"
                   data-friend-id="<%= friend.id %>"
                   data-action="click->friend-select#toggle"
-                  class="border rounded-xl p-4 cursor-pointer transition hover:bg-gray-50"
+                  class="bg-gray-100 rounded-xl p-4 cursor-pointer transition hover:bg-gray-50"
                 >
 
                   <div class="font-semibold">
@@ -134,7 +142,7 @@
     </div>
 
     <!-- PAYMENT -->
-    <div class="mt-10 pt-8 border-t space-y-6">
+    <div class="mt-1 space-y-4">
 
       <div class="pt-6 relative z-50">
         <button type="submit"
