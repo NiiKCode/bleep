@@ -75,6 +75,6 @@ end
 gem 'devise'
 gem 'rails_admin'
 
-gem "tailwindcss-rails", "~> 4.4"
+gem "tailwindcss-rails", "~> 3.3.1"
 
 gem "view_component", "~> 4.6"
