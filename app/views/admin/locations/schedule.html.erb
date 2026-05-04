@@ -18,28 +18,36 @@
           £<%= s.price %>
         </div>
 
-        <div class="flex gap-3 text-sm mb-2">
+        <div class="flex gap-3 text-sm mb-2 items-center">
           <%= link_to "Add slot",
               new_admin_scheduled_session_time_slot_path(s),
               class: "text-green-600" %>
 
-          <%= link_to "Delete",
-              delete_scheduled_session_admin_location_path(@location, s.id),
-              data: { turbo_method: :delete, confirm: "Delete session?" },
-              class: "text-red-600" %>
+          <!-- DELETE SESSION -->
+          <%= form_with url: delete_scheduled_session_admin_location_path(@location, session_id: s.id),
+              method: :delete,
+              local: true do %>
+            <%= submit_tag "Delete",
+                  data: { turbo_confirm: "Delete session?" },
+                  class: "text-red-600 bg-transparent border-0 p-0 cursor-pointer" %>
+          <% end %>
         </div>
 
         <% if s.time_slots.any? %>
           <ul class="text-sm text-gray-700">
             <% s.time_slots.each do |ts| %>
-              <li class="flex justify-between">
+              <li class="flex justify-between items-center">
                 <span>
                   <%= ts.start_time.strftime("%H:%M") %> - <%= ts.end_time.strftime("%H:%M") %>
                 </span>
-                <%= link_to "✕",
-                    admin_scheduled_session_time_slot_path(s, ts),
-                    data: { turbo_method: :delete },
-                    class: "text-red-500" %>
+
+                <!-- DELETE TIME SLOT -->
+                <%= form_with url: admin_scheduled_session_time_slot_path(s, ts),
+                    method: :delete,
+                    local: true do %>
+                  <%= submit_tag "✕",
+                        class: "text-red-500 bg-transparent border-0 p-0 cursor-pointer" %>
+                <% end %>
               </li>
             <% end %>
           </ul>

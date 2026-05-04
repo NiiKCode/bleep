@@ -15,12 +15,22 @@
         <li class="flex justify-between items-center border-b pb-2">
           <span><%= location.name %></span>
 
-          <div class="flex gap-3 text-sm">
-            <%= link_to "Edit", edit_admin_location_path(location), class: "text-blue-600" %>
-            <%= link_to "Schedule", schedule_admin_location_path(location), class: "text-green-600" %>
-            <%= link_to "Delete", admin_location_path(location),
-                data: { turbo_method: :delete, confirm: "Are you sure?" },
-                class: "text-red-600" %>
+          <div class="flex gap-3 text-sm items-center">
+            <%= link_to "Edit",
+                edit_admin_location_path(location),
+                class: "text-blue-600" %>
+
+            <%= link_to "Schedule",
+                schedule_admin_location_path(location),
+                class: "text-green-600" %>
+
+            <%= form_with url: admin_location_path(location),
+                method: :delete,
+                local: true do %>
+              <%= submit_tag "Delete",
+                    data: { turbo_confirm: "Are you sure?" },
+                    class: "text-red-600 bg-transparent border-0 p-0 cursor-pointer" %>
+            <% end %>
           </div>
         </li>
       <% end %>
@@ -40,11 +50,18 @@
         <li class="flex justify-between items-center border-b pb-2">
           <span><%= st.title %></span>
 
-          <div class="flex gap-3 text-sm">
-            <%= link_to "Edit", edit_admin_session_type_path(st), class: "text-blue-600" %>
-            <%= link_to "Delete", admin_session_type_path(st),
-                data: { turbo_method: :delete, confirm: "Are you sure?" },
-                class: "text-red-600" %>
+          <div class="flex gap-3 text-sm items-center">
+            <%= link_to "Edit",
+                edit_admin_session_type_path(st),
+                class: "text-blue-600" %>
+
+            <%= form_with url: admin_session_type_path(st),
+                method: :delete,
+                local: true do %>
+              <%= submit_tag "Delete",
+                    data: { turbo_confirm: "Are you sure?" },
+                    class: "text-red-600 bg-transparent border-0 p-0 cursor-pointer" %>
+            <% end %>
           </div>
         </li>
       <% end %>
