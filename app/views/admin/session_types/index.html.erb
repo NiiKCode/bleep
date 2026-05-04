@@ -30,13 +30,11 @@
                 edit_admin_session_type_path(session_type),
                 class: "btn btn-sm btn-secondary" %>
 
-            <%= link_to "🗑 Delete",
-                admin_session_type_path(session_type),
-                data: {
-                  turbo_method: :delete,
-                  turbo_confirm: "Are you sure?"
-                },
-                class: "btn btn-sm btn-danger" %>
+          <%= button_to "🗑 Delete",
+              admin_session_type_path(session_type),
+              method: :delete,
+              form: { data: { turbo_confirm: "Are you sure?" } },
+              class: "btn btn-sm btn-danger" %>
           </td>
         </tr>
       <% end %>

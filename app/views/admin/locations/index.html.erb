@@ -28,12 +28,10 @@
               edit_admin_location_path(location),
               class: "btn btn-sm btn-outline-secondary" %>
 
-          <%= link_to "🗑 Delete",
+          <%= button_to "🗑 Delete",
               admin_location_path(location),
-              data: {
-                turbo_method: :delete,
-                turbo_confirm: "Are you sure?"
-              },
+              method: :delete,
+              form: { data: { turbo_confirm: "Are you sure?" } },
               class: "btn btn-sm btn-danger" %>
         </td>
       </tr>
