@@ -1,49 +1,68 @@
 Rails.application.routes.draw do
-  get 'accounts/show'
-
+  # ========================
+  # AUTH
+  # ========================
   devise_for :users, controllers: {
     registrations: "users/registrations"
   }
 
+  # ========================
+  # ROOT
+  # ========================
   root "pages#home"
 
-  # ✅ STRIPE WEBHOOK
-  post '/webhooks/stripe', to: 'webhooks#stripe'
+  # ========================
+  # WEBHOOKS
+  # ========================
+  post "/webhooks/stripe", to: "webhooks#stripe"
 
+  # ========================
+  # SESSIONS (booking flow)
+  # ========================
   resources :sessions, only: [:index]
 
-  # ✅ BOOKINGS
+  # ========================
+  # BOOKINGS
+  # ========================
   resources :bookings, only: [:new, :create, :show] do
     collection do
       get :success
     end
 
-    # ✅ ADD THIS BLOCK
     member do
       get :edit_score
       patch :update_score
     end
   end
 
-  # ✅ ACCOUNT PAGE
+  # ========================
+  # ACCOUNT
+  # ========================
   resource :account, only: [:show]
 
-  # ✅ FRIENDS
+  # ========================
+  # FRIENDS
+  # ========================
   resources :friends, only: [:create]
 
-  # ✅ LIVE USER SEARCH
+  # ========================
+  # USER SEARCH
+  # ========================
   resources :users, only: [] do
     collection do
       get :search
     end
   end
 
-  # ✅ ADMIN AREA
+  # ========================
+  # ADMIN AREA
+  # ========================
   namespace :admin do
     root to: "dashboard#index"
     get "dashboard", to: "dashboard#index"
 
-    resources :locations, except: [:show] do
+    # ✅ FIXED: allow :show so /admin/locations/:id works
+    resources :locations do
       member do
         get :schedule
         post :create_date
@@ -53,7 +72,8 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :session_types, except: [:show]
+    # same fix here (optional but recommended)
+    resources :session_types
 
     resources :scheduled_sessions do
       resources :time_slots, only: [:new, :create, :edit, :update, :destroy]
