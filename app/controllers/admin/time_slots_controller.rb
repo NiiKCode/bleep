@@ -1,6 +1,4 @@
-class Admin::TimeSlotsController < ApplicationController
-  before_action :authenticate_user!
-  before_action :require_admin
+class Admin::TimeSlotsController < Admin::BaseController
   before_action :set_scheduled_session
   before_action :set_time_slot, only: [:edit, :update, :destroy]
 
@@ -50,9 +48,5 @@ class Admin::TimeSlotsController < ApplicationController
 
   def time_slot_params
     params.require(:time_slot).permit(:start_time, :end_time, :capacity)
-  end
-
-  def require_admin
-    redirect_to root_path, alert: "Not authorized" unless current_user.admin?
   end
 end

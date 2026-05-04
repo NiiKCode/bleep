@@ -1,9 +1,6 @@
 Rails.application.routes.draw do
   get 'accounts/show'
 
-  # RailsAdmin
-  mount RailsAdmin::Engine => "/rails_admin", as: "rails_admin"
-
   devise_for :users, controllers: {
     registrations: "users/registrations"
   }

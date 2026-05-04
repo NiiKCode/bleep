@@ -1,17 +1,16 @@
-<h1>
+<h1 class="text-2xl font-bold mb-4">
   Add Time Slot for <%= @scheduled_session.session_type.title %>
-  (<%= @scheduled_session.date.strftime("%d %b %Y") %>)
 </h1>
 
-<p class="text-sm text-gray-600 mb-3">
-  Date is fixed to session date: <strong><%= @scheduled_session.date %></strong>
+<p class="text-sm text-gray-500 mb-6">
+  Date: <strong><%= @scheduled_session.date %></strong>
 </p>
 
-<%= form_with model: [:admin, @scheduled_session, @time_slot], local: true do |f| %>
+<%= form_with model: [:admin, @scheduled_session, @time_slot], local: true, class: "space-y-6 max-w-md" do |f| %>
 
   <% if @time_slot.errors.any? %>
-    <div class="alert alert-danger">
-      <ul>
+    <div class="bg-red-100 border border-red-300 text-red-700 p-4 rounded-lg">
+      <ul class="list-disc pl-5 text-sm">
         <% @time_slot.errors.full_messages.each do |msg| %>
           <li><%= msg %></li>
         <% end %>
@@ -19,22 +18,31 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :start_time %>
-    <%= f.time_field :start_time, required: true %>
+  <div>
+    <%= f.label :start_time, class: "block text-sm font-semibold mb-1" %>
+    <%= f.time_field :start_time,
+        class: "w-full border rounded-lg px-3 py-2" %>
   </div>
 
-  <div class="field">
-    <%= f.label :end_time %>
-    <%= f.time_field :end_time, required: true %>
+  <div>
+    <%= f.label :end_time, class: "block text-sm font-semibold mb-1" %>
+    <%= f.time_field :end_time,
+        class: "w-full border rounded-lg px-3 py-2" %>
   </div>
 
-  <div class="field">
-    <%= f.label :capacity %>
-    <%= f.number_field :capacity, min: 1, required: true %>
+  <div>
+    <%= f.label :capacity, class: "block text-sm font-semibold mb-1" %>
+    <%= f.number_field :capacity,
+        class: "w-full border rounded-lg px-3 py-2" %>
   </div>
 
-  <%= f.submit "Add Time Slot", class: "btn btn-primary" %>
+  <div class="flex gap-3">
+    <%= f.submit "Add Time Slot",
+        class: "bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800" %>
+
+    <%= link_to "Cancel",
+        schedule_admin_location_path(@scheduled_session.location),
+        class: "px-4 py-2 border rounded-lg" %>
+  </div>
+
 <% end %>
-
-<%= link_to "⬅ Back", schedule_admin_location_path(@scheduled_session.location), class: "btn btn-secondary mt-3" %>

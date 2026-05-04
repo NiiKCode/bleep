@@ -12,8 +12,7 @@ require "action_mailer/railtie"
 require "action_view/railtie"
 require "action_cable/engine"
 
-# ✅ keep sprockets just for RailsAdmin
-require "sprockets/railtie"
+require "sprockets/railtie" # (optional, but fine to keep)
 
 Bundler.require(*Rails.groups)
 
@@ -34,11 +33,7 @@ module Bleep
     # ========================
     # ASSETS (unchanged)
     # ========================
-    config.assets.precompile = [
-      "rails_admin/application.css",
-      "rails_admin/application.js",
-      "application.css"
-    ]
+    config.assets.precompile += %w[ application.css ]
 
     config.assets.paths << Rails.root.join("app", "assets", "images")
   end

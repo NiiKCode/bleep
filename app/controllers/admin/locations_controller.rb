@@ -1,19 +1,20 @@
-class Admin::LocationsController < ApplicationController
-  before_action :authenticate_user!
-  before_action :require_admin!
-  before_action :set_location, only: [:edit, :update, :schedule, :create_date, :destroy, :destroy_scheduled_session]
+class Admin::LocationsController < Admin::BaseController
+  before_action :set_location, only: [
+    :edit,
+    :update,
+    :schedule,
+    :create_date,
+    :destroy,
+    :destroy_scheduled_session
+  ]
 
   # --------------------------
   # Standard CRUD
   # --------------------------
 
   def index
-    @locations = Location.all
+    @locations = Location.order(:name)
   end
-
-  # def show
-  #  @scheduled_sessions = @location.scheduled_sessions.includes(:session_type, :time_slots)
-  # end
 
   def new
     @location = Location.new
@@ -21,6 +22,7 @@ class Admin::LocationsController < ApplicationController
 
   def create
     @location = Location.new(location_params)
+
     if @location.save
       redirect_to admin_dashboard_path, notice: "Location created successfully."
     else
@@ -49,29 +51,49 @@ class Admin::LocationsController < ApplicationController
 
   # GET /admin/locations/:id/schedule
   def schedule
-    @past_sessions = @location.scheduled_sessions.where("date < ?", Date.today).order(date: :desc)
-    @upcoming_sessions = @location.scheduled_sessions.where("date >= ?", Date.today).order(:date)
+    @past_sessions = @location.scheduled_sessions
+      .includes(:session_type, :time_slots)
+      .where("date < ?", Date.today)
+      .order(date: :desc)
+
+    @upcoming_sessions = @location.scheduled_sessions
+      .includes(:session_type, :time_slots)
+      .where("date >= ?", Date.today)
+      .order(:date)
+
     @scheduled_session = @location.scheduled_sessions.build
   end
 
   # POST /admin/locations/:id/create_date
   def create_date
     @scheduled_session = @location.scheduled_sessions.build(scheduled_session_params)
+
     if @scheduled_session.save
-      redirect_to schedule_admin_location_path(@location), notice: "New session date created."
+      redirect_to schedule_admin_location_path(@location),
+                  notice: "New session date created."
     else
       # Rehydrate lists so form can render again with errors
-      @past_sessions = @location.scheduled_sessions.where("date < ?", Date.today).order(date: :desc)
-      @upcoming_sessions = @location.scheduled_sessions.where("date >= ?", Date.today).order(:date)
+      @past_sessions = @location.scheduled_sessions
+        .includes(:session_type, :time_slots)
+        .where("date < ?", Date.today)
+        .order(date: :desc)
+
+      @upcoming_sessions = @location.scheduled_sessions
+        .includes(:session_type, :time_slots)
+        .where("date >= ?", Date.today)
+        .order(:date)
+
       render :schedule, status: :unprocessable_entity
     end
   end
 
-  # POST /admin/locations/:id/delete_scheduled_session/:session_id
+  # DELETE /admin/locations/:id/delete_scheduled_session/:session_id
   def destroy_scheduled_session
-    @scheduled_session = @location.scheduled_sessions.find(params[:session_id])
-    @scheduled_session.destroy
-    redirect_to schedule_admin_location_path(@location), notice: "Scheduled session deleted successfully."
+    scheduled_session = @location.scheduled_sessions.find(params[:session_id])
+    scheduled_session.destroy
+
+    redirect_to schedule_admin_location_path(@location),
+                notice: "Scheduled session deleted successfully."
   end
 
   private
@@ -86,9 +108,5 @@ class Admin::LocationsController < ApplicationController
 
   def scheduled_session_params
     params.require(:scheduled_session).permit(:date, :session_type_id, :price)
-  end
-
-  def require_admin!
-    redirect_to root_path, alert: "Not authorized" unless current_user&.admin?
   end
 end

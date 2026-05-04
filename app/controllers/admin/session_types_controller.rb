@@ -1,6 +1,4 @@
-class Admin::SessionTypesController < ApplicationController
-  before_action :authenticate_user!
-  before_action :require_admin!
+class Admin::SessionTypesController < Admin::BaseController
   before_action :set_session_type, only: [:edit, :update, :destroy]
 
   def index
@@ -43,9 +41,5 @@ class Admin::SessionTypesController < ApplicationController
 
   def session_type_params
     params.require(:session_type).permit(:title, :description)
-  end
-
-  def require_admin!
-    redirect_to root_path, alert: "Not authorized" unless current_user&.admin?
   end
 end

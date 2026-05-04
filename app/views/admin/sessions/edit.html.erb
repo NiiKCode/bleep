@@ -1,17 +1,28 @@
-<h2>Edit Session</h2>
+<h1 class="text-2xl font-bold mb-6">Edit Session</h1>
 
-<%= form_with model: [:admin, @session], local: true do |form| %>
-  <%= form.label :title %>
-  <%= form.text_field :title %><br>
+<%= form_with model: [:admin, @session], local: true, class: "space-y-6 max-w-lg" do |form| %>
 
-  <%= form.label :description %>
-  <%= form.text_area :description %><br>
+  <div>
+    <%= form.label :title, class: "block text-sm font-semibold mb-1" %>
+    <%= form.text_field :title, class: "w-full border rounded-lg px-3 py-2" %>
+  </div>
 
-  <%= form.label :date %>
-  <%= form.date_field :date %><br>
+  <div>
+    <%= form.label :description, class: "block text-sm font-semibold mb-1" %>
+    <%= form.text_area :description, rows: 4, class: "w-full border rounded-lg px-3 py-2" %>
+  </div>
 
-  <%= form.label :price %>
-  <%= form.number_field :price, step: 0.01 %><br>
+  <div>
+    <%= form.label :date, class: "block text-sm font-semibold mb-1" %>
+    <%= form.date_field :date, class: "w-full border rounded-lg px-3 py-2" %>
+  </div>
 
-  <%= form.submit "Update Session", class: "btn btn-primary" %>
+  <div>
+    <%= form.label :price, class: "block text-sm font-semibold mb-1" %>
+    <%= form.number_field :price, step: 0.01, class: "w-full border rounded-lg px-3 py-2" %>
+  </div>
+
+  <%= form.submit "Update Session",
+      class: "bg-black text-white px-5 py-2 rounded-lg hover:bg-gray-800" %>
+
 <% end %>

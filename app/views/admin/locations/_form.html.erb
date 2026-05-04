@@ -1,8 +1,11 @@
-<%= form_with model: [:admin, @location], local: true, data: { turbo: false } do |form| %>
+<%= form_with model: [:admin, @location], local: true, data: { turbo: false }, class: "space-y-6" do |form| %>
+
   <% if @location.errors.any? %>
-    <div class="alert alert-danger">
-      <h2><%= pluralize(@location.errors.count, "error") %> prohibited this location from being saved:</h2>
-      <ul>
+    <div class="bg-red-100 border border-red-300 text-red-700 p-4 rounded-lg">
+      <h2 class="font-semibold mb-2">
+        <%= pluralize(@location.errors.count, "error") %> prevented saving:
+      </h2>
+      <ul class="list-disc pl-5 text-sm">
         <% @location.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
@@ -10,17 +13,21 @@
     </div>
   <% end %>
 
-<div class="mb-3">
-  <%= form.label :name %>
-  <%= form.text_field :name, class: "form-control" %>
-</div>
-
-<div class="mb-3">
-  <%= form.label :city %>
-  <%= form.text_field :city, class: "form-control" %>
-</div>
-
-  <div class="actions">
-    <%= form.submit class: "btn btn-primary" %>
+  <div>
+    <%= form.label :name, class: "block text-sm font-semibold mb-1" %>
+    <%= form.text_field :name,
+        class: "w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-black focus:outline-none" %>
   </div>
+
+  <div>
+    <%= form.label :city, class: "block text-sm font-semibold mb-1" %>
+    <%= form.text_field :city,
+        class: "w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-black focus:outline-none" %>
+  </div>
+
+  <div>
+    <%= form.submit "Save Location",
+        class: "bg-black text-white px-5 py-2 rounded-lg hover:bg-gray-800 transition" %>
+  </div>
+
 <% end %>

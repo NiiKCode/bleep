@@ -31,12 +31,6 @@ class ApplicationController < ActionController::Base
   private
 
   def layout_by_resource
-    if devise_controller?
-      "application"
-    elsif controller_path.start_with?("rails_admin")
-      "rails_admin/custom"
-    else
-      "application"
-    end
+    "application"
   end
 end

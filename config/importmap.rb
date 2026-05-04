@@ -15,7 +15,3 @@ pin "chartjs-adapter-date-fns", to: "https://cdn.jsdelivr.net/npm/chartjs-adapte
 
 # Bootstrap via CDN
 pin "bootstrap", to: "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-
-# RailsAdmin
-pin "rails_admin", to: "rails_admin/rails_admin.js"
-pin "rails_admin.css", to: "rails_admin/rails_admin.css"
