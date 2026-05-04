@@ -17,7 +17,7 @@ Rails.application.configure do
   config.public_file_server.enabled = ENV["RAILS_SERVE_STATIC_FILES"].present?
 
   # Do not fallback to asset pipeline
-  config.assets.compile = false
+  config.assets.compile = true
 
   # Active Storage (local for now — OK for MVP)
   config.active_storage.service = :local
