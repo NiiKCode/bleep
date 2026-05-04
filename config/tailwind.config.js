@@ -1,8 +1,10 @@
 export default {
   content: [
-    "./app/views/**/*.{erb,html}",
+    "./app/views/**/*",
     "./app/helpers/**/*.rb",
-    "./app/javascript/**/*.js"
+    "./app/components/**/*",
+    "./app/javascript/**/*",
+    "./config/initializers/**/*.rb"
   ],
   theme: {
     extend: {
