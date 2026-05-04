@@ -52,7 +52,7 @@ class Booking < ApplicationRecord
   # VALIDATIONS
   # ========================
   validates :user_id,
-            uniqueness: { scope: :time_slot_id }
+  uniqueness: { scope: [:time_slot_id, :partner_user_id] }
 
   validates :score,
             numericality: { greater_than_or_equal_to: 0 },

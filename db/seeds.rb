@@ -27,13 +27,13 @@ end
 # ========================
 puts "Creating users..."
 
-admin = User.find_or_create_by!(email: "admin@bleep.fit")
+admin = User.find_or_initialize_by(email: "admin@bleep.fit")
 
-admin.update!(
-  password: "Yoghurt71375",
-  password_confirmation: "Yoghurt71375",
-  admin: true
-)
+admin.password = "Yoghurt71375"
+admin.password_confirmation = "Yoghurt71375"
+admin.admin = true
+
+admin.save!
 
 user = User.find_or_create_by!(email: "test@example.com") do |u|
   u.password = "password"
