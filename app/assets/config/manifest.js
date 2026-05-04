@@ -1,11 +1,9 @@
 //= link_tree ../images
 
-// Tailwind build output (ONLY CSS we want)
+// Tailwind build output
 //= link_tree ../builds
 
-// ✅ ADD THIS LINE (critical for fonts)
+// Fonts
 //= link_tree ../fonts
 
-// JS (importmap)
-//= link application.js
-//= link_tree ../../javascript/controllers .js
+// DO NOT include controllers here (handled by importmap)
