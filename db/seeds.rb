@@ -1,26 +1,16 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
-# db/seeds.rb
-
 puts "🌱 Seeding database..."
 
 # ========================
-# CLEAN ONLY TIME-SERIES DATA (SAFE)
+# CLEAN ONLY OLD / TIME-SERIES DATA
 # ========================
-puts "Cleaning existing bookings + sessions..."
+puts "Cleaning old sessions..."
 
-if Rails.env.development?
-  Booking.destroy_all
-  TimeSlot.destroy_all
-  ScheduledSession.destroy_all
-end
+Booking.joins(:time_slot)
+       .where("time_slots.start_time < ?", Time.current)
+       .destroy_all
+
+TimeSlot.where("start_time < ?", Time.current).destroy_all
+ScheduledSession.where("date < ?", Date.today).destroy_all
 
 # ========================
 # USERS
@@ -28,36 +18,37 @@ end
 puts "Creating users..."
 
 admin = User.find_or_initialize_by(email: "admin@bleep.fit")
-
 admin.password = "Yoghurt71375"
 admin.password_confirmation = "Yoghurt71375"
 admin.admin = true
-
 admin.save!
 
-user = User.find_or_create_by!(email: "test@example.com") do |u|
-  u.password = "password"
-  u.password_confirmation = "password"
-  u.first_name = "James"
-  u.last_name = "Branning"
-end
+user = User.find_or_initialize_by(email: "test@example.com")
+user.update!(
+  password: "password",
+  password_confirmation: "password",
+  first_name: "James",
+  last_name: "Branning"
+)
 
-friend1 = User.find_or_create_by!(email: "sam@example.com") do |u|
-  u.password = "password"
-  u.password_confirmation = "password"
-  u.first_name = "Sam"
-  u.last_name = "Wilson"
-end
+friend1 = User.find_or_initialize_by(email: "sam@example.com")
+friend1.update!(
+  password: "password",
+  password_confirmation: "password",
+  first_name: "Sam",
+  last_name: "Wilson"
+)
 
-friend2 = User.find_or_create_by!(email: "ben@example.com") do |u|
-  u.password = "password"
-  u.password_confirmation = "password"
-  u.first_name = "Ben"
-  u.last_name = "Evans"
-end
+friend2 = User.find_or_initialize_by(email: "ben@example.com")
+friend2.update!(
+  password: "password",
+  password_confirmation: "password",
+  first_name: "Ben",
+  last_name: "Evans"
+)
 
 # ========================
-# FRIENDSHIPS (avoid dupes)
+# FRIENDSHIPS
 # ========================
 puts "Creating friendships..."
 
@@ -82,12 +73,18 @@ puts "Creating location..."
 location = Location.find_or_create_by!(name: "Clapham Common", city: "London")
 
 # ========================
-# HELPER: CREATE TIME SERIES
+# HELPER: CREATE SERIES
 # ========================
-def create_series(user:, partner:, session_type:, location:, points:, step_days:, base_score:)
+def create_series(user:, partner:, session_type:, location:, points:, step_days:, base_score:, direction:)
   points.times do |i|
-    date = (points - i) * step_days
-    date = date.days.ago.to_date
+    offset = (i + 1) * step_days
+
+    date =
+      if direction == :past
+        offset.days.ago.to_date
+      else
+        offset.days.from_now.to_date
+      end
 
     scheduled_session = ScheduledSession.find_or_create_by!(
       date: date,
@@ -117,14 +114,95 @@ def create_series(user:, partner:, session_type:, location:, points:, step_days:
 end
 
 # ========================
-# GENERATE DATA (KEY PART)
+# GENERATE DATA
 # ========================
-puts "Creating chart-friendly data..."
+puts "Creating data..."
 
-# ~2 years of weekly data (104 points)
-create_series(user: user, partner: nil,     session_type: bleep, location: location, points: 104, step_days: 7, base_score: 6.0)
-create_series(user: user, partner: friend1, session_type: bleep, location: location, points: 104, step_days: 7, base_score: 6.5)
-create_series(user: user, partner: friend2, session_type: bleep, location: location, points: 104, step_days: 7, base_score: 6.2)
+# ------------------------
+# FUTURE DATA (for booking UI)
+# ------------------------
+puts "→ Future sessions..."
 
-# ~1.5 years bi-weekly
-create_series(user: user, partner: nil,     session_type: carry, location: location, points: 40, step_days: 14, base_score: 8.0)
+create_series(
+  user: user,
+  partner: nil,
+  session_type: bleep,
+  location: location,
+  points: 26,            # 6 months weekly
+  step_days: 7,
+  base_score: 6.0,
+  direction: :future
+)
+
+create_series(
+  user: user,
+  partner: friend1,
+  session_type: bleep,
+  location: location,
+  points: 26,
+  step_days: 7,
+  base_score: 6.5,
+  direction: :future
+)
+
+create_series(
+  user: user,
+  partner: friend2,
+  session_type: bleep,
+  location: location,
+  points: 26,
+  step_days: 7,
+  base_score: 6.2,
+  direction: :future
+)
+
+create_series(
+  user: user,
+  partner: nil,
+  session_type: carry,
+  location: location,
+  points: 12,            # 3 months bi-weekly
+  step_days: 14,
+  base_score: 8.0,
+  direction: :future
+)
+
+# ------------------------
+# PAST DATA (for charts)
+# ------------------------
+puts "→ Past sessions..."
+
+create_series(
+  user: user,
+  partner: nil,
+  session_type: bleep,
+  location: location,
+  points: 52,            # 1 year weekly history
+  step_days: 7,
+  base_score: 5.5,
+  direction: :past
+)
+
+create_series(
+  user: user,
+  partner: friend1,
+  session_type: bleep,
+  location: location,
+  points: 52,
+  step_days: 7,
+  base_score: 5.8,
+  direction: :past
+)
+
+create_series(
+  user: user,
+  partner: nil,
+  session_type: carry,
+  location: location,
+  points: 24,            # ~1 year bi-weekly
+  step_days: 14,
+  base_score: 7.5,
+  direction: :past
+)
+
+puts "✅ Seeding complete"
