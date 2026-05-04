@@ -9,78 +9,122 @@
 #   end
 # db/seeds.rb
 
-user = User.create!(
-  email: "test@example.com",
-  password: "password",
-  password_confirmation: "password",
-  first_name: "James",
-  last_name: "Branning"
-)
+puts "🌱 Seeding database..."
 
-friend1 = User.create!(
-  email: "sam@example.com",
-  password: "password",
-  password_confirmation: "password",
-  first_name: "Sam",
-  last_name: "Wilson"
-)
+# ========================
+# CLEAN ONLY TIME-SERIES DATA (SAFE)
+# ========================
+puts "Cleaning existing bookings + sessions..."
 
-friend2 = User.create!(
-  email: "ben@example.com",
-  password: "password",
-  password_confirmation: "password",
-  first_name: "Ben",
-  last_name: "Evans"
-)
-
-# Friendships
-[user, friend1, friend2].combination(2) do |u1, u2|
-  u1.friendships.create!(friend: u2)
-  u2.friendships.create!(friend: u1)
+if Rails.env.development?
+  Booking.destroy_all
+  TimeSlot.destroy_all
+  ScheduledSession.destroy_all
 end
 
+# ========================
+# USERS
+# ========================
+puts "Creating users..."
+
+admin = User.find_or_create_by!(email: "admin@bleep.fit")
+
+admin.update!(
+  password: "Yoghurt71375",
+  password_confirmation: "Yoghurt71375",
+  admin: true
+)
+
+user = User.find_or_create_by!(email: "test@example.com") do |u|
+  u.password = "password"
+  u.password_confirmation = "password"
+  u.first_name = "James"
+  u.last_name = "Branning"
+end
+
+friend1 = User.find_or_create_by!(email: "sam@example.com") do |u|
+  u.password = "password"
+  u.password_confirmation = "password"
+  u.first_name = "Sam"
+  u.last_name = "Wilson"
+end
+
+friend2 = User.find_or_create_by!(email: "ben@example.com") do |u|
+  u.password = "password"
+  u.password_confirmation = "password"
+  u.first_name = "Ben"
+  u.last_name = "Evans"
+end
+
+# ========================
+# FRIENDSHIPS (avoid dupes)
+# ========================
+puts "Creating friendships..."
+
+[[user, friend1], [user, friend2], [friend1, friend2]].each do |u1, u2|
+  Friendship.find_or_create_by!(user: u1, friend: u2)
+  Friendship.find_or_create_by!(user: u2, friend: u1)
+end
+
+# ========================
+# SESSION TYPES
+# ========================
 puts "Creating session types..."
 
-bleep = SessionType.create!(title: "Bleep Test Classic")
-carry = SessionType.create!(title: "Weighted Carry")
-bike  = SessionType.create!(title: "Assault Bike")
+bleep = SessionType.find_or_create_by!(title: "The Bleep Test")
+carry = SessionType.find_or_create_by!(title: "Weighted Carry")
 
-session_types = [bleep, carry, bike]
-
+# ========================
+# LOCATION
+# ========================
 puts "Creating location..."
 
-location = Location.create!(
-  name: "Test Gym",
-  city: "London"
-)
+location = Location.find_or_create_by!(name: "Clapham Common", city: "London")
 
-puts "Creating sessions + bookings..."
+# ========================
+# HELPER: CREATE TIME SERIES
+# ========================
+def create_series(user:, partner:, session_type:, location:, points:, step_days:, base_score:)
+  points.times do |i|
+    date = (points - i) * step_days
+    date = date.days.ago.to_date
 
-10.times do |i|
-  date = (10 - i).days.ago.to_date
-  session_type = session_types.sample
+    scheduled_session = ScheduledSession.find_or_create_by!(
+      date: date,
+      location: location,
+      session_type: session_type
+    ) do |s|
+      s.price = 10
+    end
 
-  scheduled_session = ScheduledSession.create!(
-    date: date,
-    price: 10,
-    location: location,
-    session_type: session_type
-  )
+    time_slot = TimeSlot.find_or_create_by!(
+      start_time: date.to_datetime + 9.hours,
+      scheduled_session: scheduled_session
+    ) do |t|
+      t.end_time = date.to_datetime + 9.hours + 30.minutes
+      t.capacity = 10
+    end
 
-  time_slot = TimeSlot.create!(
-    start_time: date.to_datetime + 9.hours,
-    end_time: date.to_datetime + 9.hours + 30.minutes,
-    capacity: 10,
-    scheduled_session: scheduled_session
-  )
-
-  partner = [nil, friend1, friend2].sample
-
-  Booking.create!(
-    user: user,
-    partner_user: partner,
-    time_slot: time_slot,
-    status: "completed", # optional now (time logic also works)
-    score: (rand < 0.7 ? rand(5.0..10.0).round(1) : nil) # some missing scores
-  )
+    Booking.find_or_create_by!(
+      user: user,
+      time_slot: time_slot,
+      partner_user: partner
+    ) do |b|
+      b.status = "completed"
+      b.score = (base_score + i * 0.4 + rand(-0.2..0.2)).round(1)
+    end
+  end
 end
+
+# ========================
+# GENERATE DATA (KEY PART)
+# ========================
+puts "Creating chart-friendly data..."
+
+# ~2 years of weekly data (104 points)
+create_series(user: user, partner: nil,     session_type: bleep, location: location, points: 104, step_days: 7, base_score: 6.0)
+create_series(user: user, partner: friend1, session_type: bleep, location: location, points: 104, step_days: 7, base_score: 6.5)
+create_series(user: user, partner: friend2, session_type: bleep, location: location, points: 104, step_days: 7, base_score: 6.2)
+
+# ~1.5 years bi-weekly
+create_series(user: user, partner: nil,     session_type: carry, location: location, points: 40, step_days: 14, base_score: 8.0)
