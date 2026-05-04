@@ -1,7 +1,9 @@
 <h1>Locations</h1>
 
 <p>
-  <%= link_to "➕ Add New Location", new_admin_location_path, class: "btn btn-primary" %>
+  <%= link_to "➕ Add New Location",
+      new_admin_location_path,
+      class: "btn btn-primary" %>
 </p>
 
 <table class="table">
@@ -11,17 +13,28 @@
       <th>Actions</th>
     </tr>
   </thead>
+
   <tbody>
     <% @locations.each do |location| %>
       <tr>
         <td><%= location.name %></td>
+
         <td>
-          <%= link_to "📅 Schedule", schedule_admin_location_path(location), class: "btn btn-sm btn-outline-primary" %>
-          <%= link_to "✏️ Edit", edit_admin_location_path(location), class: "btn btn-sm btn-outline-secondary" %>
-          <%= link_to "🗑 Delete", admin_location_path(location),
-                      data: { confirm: "Are you sure?" },
-                      method: :delete,
-                      class: "btn btn-sm btn-danger" %>
+          <%= link_to "📅 Schedule",
+              schedule_admin_location_path(location),
+              class: "btn btn-sm btn-outline-primary" %>
+
+          <%= link_to "✏️ Edit",
+              edit_admin_location_path(location),
+              class: "btn btn-sm btn-outline-secondary" %>
+
+          <%= link_to "🗑 Delete",
+              admin_location_path(location),
+              data: {
+                turbo_method: :delete,
+                turbo_confirm: "Are you sure?"
+              },
+              class: "btn btn-sm btn-danger" %>
         </td>
       </tr>
     <% end %>
