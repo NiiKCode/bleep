@@ -1,92 +1,109 @@
 class SessionsController < ApplicationController
   def index
-    # ========================
-    # BASE DATA
-    # ========================
+    # =========================
+    # LOCATIONS
+    # =========================
+
     @locations = Location.order(:name)
 
-    # ========================
-    # PARAMS (CAST TYPES)
-    # ========================
-    @selected_location_id = params[:location_id].present? ? params[:location_id].to_i : nil
+    @selected_location =
+      @locations.find_by(id: params[:location_id]) ||
+      @locations.first
 
-    @selected_date = begin
-      Date.parse(params[:date]) if params[:date].present?
-    rescue ArgumentError
-      nil
-    end
+    @selected_location_id = @selected_location&.id
 
-    @selected_session_type_id = params[:session_type_id].present? ? params[:session_type_id].to_i : nil
+    # =========================
+    # AVAILABLE DATES
+    # =========================
 
-    # ========================
-    # DEFAULT LOCATION
-    # ========================
-    @selected_location_id ||= @locations.first&.id
+    @available_dates =
+      ScheduledSession.available_dates_for(
+        @selected_location_id
+      )
 
-    # ========================
-    # AVAILABLE DATES (FUTURE ONLY)
-    # ========================
-    @available_dates = []
+    # =========================
+    # SELECTED DATE
+    # =========================
 
-    if @selected_location_id
-      @available_dates = ScheduledSession
-        .where(location_id: @selected_location_id)
-        .where("date >= ?", Date.today)
-        .order(:date)
-        .distinct
-        .pluck(:date)
-    end
+    @selected_date =
+      parse_selected_date || @available_dates.first
 
-    # ========================
-    # DEFAULT DATE
-    # ========================
-    if @selected_date.nil? || !@available_dates.include?(@selected_date)
-      @selected_date = @available_dates.first
-    end
+    # =========================
+    # SESSION TYPES
+    # =========================
 
-    # ========================
-    # AVAILABLE SESSION TYPES
-    # ========================
-    @available_session_types = []
+    @available_session_types =
+      if @selected_location_id && @selected_date
 
-    if @selected_location_id && @selected_date
-      @available_session_types = SessionType
-        .joins(:scheduled_sessions)
-        .where(scheduled_sessions: {
-          location_id: @selected_location_id,
-          date: @selected_date
-        })
-        .distinct
-        .order(:title)
-    end
+        ScheduledSession.available_session_types(
+          @selected_location_id,
+          @selected_date
+        )
 
-    # ========================
-    # DEFAULT SESSION TYPE
-    # ========================
-    if @selected_session_type_id.nil? ||
-       !@available_session_types.map(&:id).include?(@selected_session_type_id)
-      @selected_session_type_id = @available_session_types.first&.id
-    end
+      else
+        SessionType.none
+      end
 
-    # ========================
-    # RESULTS
-    # ========================
-    @scheduled_sessions = []
-    @time_slots = []
+    @selected_session_type =
+      @available_session_types.find_by(
+        id: params[:session_type_id]
+      ) || @available_session_types.first
 
-    if @selected_location_id && @selected_date && @selected_session_type_id
-      @scheduled_sessions = ScheduledSession
-        .includes(:location, :session_type, :time_slots)
-        .where(
+    @selected_session_type_id =
+      @selected_session_type&.id
+
+    # =========================
+    # SESSIONS
+    # =========================
+
+    @scheduled_sessions =
+      if valid_selection?
+
+        ScheduledSession.filtered(
           location_id: @selected_location_id,
           date: @selected_date,
           session_type_id: @selected_session_type_id
         )
 
-      @time_slots = @scheduled_sessions
+      else
+        ScheduledSession.none
+      end
+
+    # =========================
+    # TIME SLOTS
+    # =========================
+
+    @time_slots =
+      @scheduled_sessions
         .flat_map(&:time_slots)
-        .select { |ts| ts.start_time >= Time.current } # 🔥 extra safety
+        .select { |ts| ts.start_time >= Time.current }
         .sort_by(&:start_time)
-    end
+  end
+
+  private
+
+  # =========================
+  # DATE VALIDATION
+  # =========================
+
+  def parse_selected_date
+    return unless params[:date].present?
+
+    parsed_date = Date.parse(params[:date])
+
+    parsed_date if @available_dates.include?(parsed_date)
+
+  rescue ArgumentError
+    nil
+  end
+
+  # =========================
+  # VALID FILTERS
+  # =========================
+
+  def valid_selection?
+    @selected_location_id.present? &&
+      @selected_date.present? &&
+      @selected_session_type_id.present?
   end
 end
