@@ -2,36 +2,65 @@
 
   <!-- Location -->
   <div class="border-b py-4">
-    <label class="block text-lg font-bold">Location</label>
+    <label class="block text-lg font-bold">
+      Location
+    </label>
 
     <%= select_tag :location_id,
-          options_from_collection_for_select(@locations, :id, :display_name, @selected_location_id),
+          options_from_collection_for_select(
+            @locations,
+            :id,
+            :display_name,
+            @selected_location_id
+          ),
           include_blank: "Select a location",
-          class: "w-full text-lg font-semibold italic bg-transparent border-0 focus:ring-0",
-          onchange: "this.form.requestSubmit()" %>
-  </div>
-
-  <!-- Date -->
-  <div class="border-b py-4">
-    <label class="block text-lg font-bold">Date</label>
-
-    <%= select_tag :date,
-          options_for_select(@available_dates.map { |d| [d.strftime("%a %-d %b %Y"), d] }, @selected_date),
-          include_blank: (@selected_location_id ? "Select a date" : "Choose location first"),
-          disabled: @selected_location_id.blank?,
-          class: "w-full text-lg font-semibold italic bg-transparent border-0 focus:ring-0",
+          class: "w-full text-lg font-semibold bg-transparent border-0 focus:ring-0",
           onchange: "this.form.requestSubmit()" %>
   </div>
 
   <!-- Session Type -->
   <div class="border-b py-4">
-    <label class="block text-lg font-bold">Session Type</label>
+    <label class="block text-lg font-bold">
+      Session Type
+    </label>
 
     <%= select_tag :session_type_id,
-          options_from_collection_for_select(@available_session_types, :id, :title, @selected_session_type_id),
-          include_blank: (@selected_date ? "Select a session" : "Choose date first"),
-          disabled: @selected_date.blank?,
-          class: "w-full text-lg font-semibold italic bg-transparent border-0 focus:ring-0",
+          options_from_collection_for_select(
+            @available_session_types,
+            :id,
+            :title,
+            @selected_session_type_id
+          ),
+          include_blank: (
+            @selected_location_id ?
+            "Select a session type" :
+            "Choose location first"
+          ),
+          disabled: @selected_location_id.blank?,
+          class: "w-full text-lg font-semibold bg-transparent border-0 focus:ring-0",
+          onchange: "this.form.requestSubmit()" %>
+  </div>
+
+  <!-- Date -->
+  <div class="border-b py-4">
+    <label class="block text-lg font-bold">
+      Date
+    </label>
+
+    <%= select_tag :date,
+          options_for_select(
+            @available_dates.map { |d|
+              [formatted_session_date(d), d]
+            },
+            @selected_date
+          ),
+          include_blank: (
+            @selected_session_type_id ?
+            "Select a date" :
+            "Choose session type first"
+          ),
+          disabled: @selected_session_type_id.blank?,
+          class: "w-full text-lg font-semibold bg-transparent border-0 focus:ring-0",
           onchange: "this.form.requestSubmit()" %>
   </div>
 

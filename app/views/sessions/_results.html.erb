@@ -23,6 +23,7 @@
 
             <%= link_to "BOOK",
                   new_booking_path(time_slot_id: time_slot.id),
+                  data: { turbo_frame: "_top" },
                   class: "book-button book-button-primary" %>
 
           </div>

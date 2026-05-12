@@ -76,8 +76,8 @@
               Search by email
             </label>
 
-            <div class="border rounded-xl px-4 py-3 transition
-                        focus-within:ring-2 focus-within:ring-fuchsia-500
+            <div class="border px-4 py-3 transition
+                        focus-within:ring-9 focus-within:ring-fuchsia-700
                         hover:border-gray-400">
               <%= text_field_tag :partner_email,
                     nil,
@@ -114,7 +114,7 @@
                   data-friend-select-target="row"
                   data-friend-id="<%= friend.id %>"
                   data-action="click->friend-select#toggle"
-                  class="bg-gray-100 rounded-xl p-4 cursor-pointer transition hover:bg-gray-50"
+                  class="bg-gray-100 p-4 cursor-pointer transition hover:bg-gray-50"
                 >
 
                   <div class="font-semibold">
@@ -147,7 +147,7 @@
       <div class="pt-6 relative z-50">
         <button type="submit"
           data-disable-with="Processing..."
-          class="w-full py-4 text-xl font-extrabold rounded-2xl bg-black text-white cursor-pointer">
+          class="w-full py-4 text-xl font-extrabold bg-black text-white cursor-pointer">
           Confirm and pay
         </button>
       </div>

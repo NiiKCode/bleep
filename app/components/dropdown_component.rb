@@ -48,12 +48,15 @@ class DropdownComponent < ViewComponent::Base
   def selected_label
     return "" if @selected.nil?
 
-    if @selected.is_a?(Array)
-      @selected.first
+    matching_option =
+      @options.find do |option|
+        option_value(option) == option_value(@selected)
+      end
 
-    elsif @label_method && @selected.respond_to?(@label_method)
+    return option_label(matching_option) if matching_option.present?
+
+    if @label_method && @selected.respond_to?(@label_method)
       @selected.public_send(@label_method)
-
     else
       @selected.to_s
     end

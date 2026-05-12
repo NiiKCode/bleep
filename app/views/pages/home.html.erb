@@ -2,8 +2,10 @@
 <% content_for :full_bleed, true %>
 
 <!-- SECTION 1: Hero (FULL BLEED) -->
-<section class="w-full h-[65vh] sm:min-h-screen lg:min-h-[125vh] flex items-center justify-center bg-cover bg-center overflow-hidden pt-5 sm:pt-20 md:pt-20"
-  style="background-image: url('<%= asset_path('homepage_background.png') %>');">
+<section
+  class="w-full h-[65vh] sm:min-h-screen lg:min-h-[125vh] flex items-center justify-center bg-cover bg-center overflow-hidden pt-5 sm:pt-20 md:pt-20"
+  style="background-image: url('<%= asset_path('homepage_background.png') %>');"
+>
 
   <div class="w-full px-4 sm:px-6">
     <div class="relative z-10 w-full max-w-5xl mx-auto text-center -mt-2 sm:-mt-6 md:-mt-4 lg:-mt-16">
@@ -45,68 +47,74 @@
   </div>
 </section>
 
-<!-- SECTION 2: Directory (CONTAINED) -->
+<!-- SECTION 2: Directory -->
 <section id="directory" class="bg-white pt-4 pb-8">
 
-  <%= render "shared/narrow_container" do %>
+  <turbo-frame id="session_directory">
 
-    <%= form_with url: root_path, method: :get, local: true do %>
+    <%= render "shared/narrow_container" do %>
 
-      <div class="space-y-0.5">
+      <%= form_with url: root_path,
+                    method: :get,
+                    data: { turbo_frame: "session_directory" } do %>
 
-        <!-- CITY -->
-        <%= render DropdownComponent.new(
-          name: :city,
-          options: @cities.to_a.compact,
-          selected: @selected_city || @cities&.first || ""
-        ) %>
+        <div class="space-y-0.5">
 
-        <!-- LOCATION -->
-        <%= render DropdownComponent.new(
-          name: :location_id,
-          options: @locations.to_a.compact,
-          selected: @locations&.find { |l| l.id == @selected_location_id } || @locations&.first || "",
-          value_method: :id,
-          label_method: :name
-        ) %>
+          <!-- CITY -->
+          <%= render DropdownComponent.new(
+            name: :city,
+            options: @cities.to_a.compact,
+            selected: @selected_city || @cities&.first || ""
+          ) %>
 
-        <!-- DATE -->
-        <%= render DropdownComponent.new(
-          name: :date,
-          options: @available_dates.to_a.compact.map do |d|
-            ["#{d.strftime('%a')} #{d.day.ordinalize} #{d.strftime('%b %Y')}", d]
-          end,
-          selected: @available_dates&.find { |d| d == @selected_date } || @available_dates&.first || ""
-        ) %>
+          <!-- LOCATION -->
+          <%= render DropdownComponent.new(
+            name: :location_id,
+            options: @locations.to_a.compact,
+            selected: @locations&.find { |l| l.id == @selected_location_id } || @locations&.first || "",
+            value_method: :id,
+            label_method: :name
+          ) %>
 
-        <!-- SESSION TYPE -->
-        <%= render DropdownComponent.new(
-          name: :session_type_id,
-          options: @available_session_types.to_a.compact,
-          selected: @available_session_types&.find { |s| s.id == @selected_session_type_id } || @available_session_types&.first || "",
-          value_method: :id,
-          label_method: :title
-        ) %>
+          <!-- SESSION TYPE -->
+          <%= render DropdownComponent.new(
+            name: :session_type_id,
+            options: @available_session_types.to_a.compact,
+            selected: @available_session_types&.find { |s| s.id == @selected_session_type_id } || @available_session_types&.first || "",
+            value_method: :id,
+            label_method: :title
+          ) %>
+
+          <!-- DATE -->
+          <%= render DropdownComponent.new(
+            name: :date,
+            options: @available_dates.to_a.compact.map do |d|
+              [formatted_session_date(d), d]
+            end,
+            selected: @available_dates&.find { |d| d == @selected_date } || @available_dates&.first || ""
+          ) %>
+
+        </div>
+
+      <% end %>
+
+      <!-- RESULTS -->
+      <div class="pt-4 space-y-3">
+
+        <% if @scheduled_sessions.present? %>
+          <%= render "sessions/results",
+              scheduled_sessions: @scheduled_sessions,
+              time_slots: @time_slots %>
+        <% else %>
+          <div class="text-center text-gray-500 py-6">
+            No sessions available for selected filters
+          </div>
+        <% end %>
 
       </div>
 
     <% end %>
 
-    <!-- RESULTS -->
-    <div class="pt-4 space-y-3">
-
-      <% if @scheduled_sessions.present? %>
-        <%= render "sessions/results",
-            scheduled_sessions: @scheduled_sessions,
-            time_slots: @time_slots %>
-      <% else %>
-        <div class="text-center text-gray-500 py-6">
-          No sessions available for selected filters
-        </div>
-      <% end %>
-
-    </div>
-
-  <% end %>
+  </turbo-frame>
 
 </section>

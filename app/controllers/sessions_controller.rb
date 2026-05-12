@@ -4,40 +4,26 @@ class SessionsController < ApplicationController
     # LOCATIONS
     # =========================
 
-    @locations = Location.order(:name)
+    @locations =
+      Location.order(:name)
 
     @selected_location =
-      @locations.find_by(id: params[:location_id]) ||
-      @locations.first
+      @locations.find_by(
+        id: params[:location_id]
+      ) || @locations.first
 
-    @selected_location_id = @selected_location&.id
-
-    # =========================
-    # AVAILABLE DATES
-    # =========================
-
-    @available_dates =
-      ScheduledSession.available_dates_for(
-        @selected_location_id
-      )
-
-    # =========================
-    # SELECTED DATE
-    # =========================
-
-    @selected_date =
-      parse_selected_date || @available_dates.first
+    @selected_location_id =
+      @selected_location&.id
 
     # =========================
     # SESSION TYPES
     # =========================
 
     @available_session_types =
-      if @selected_location_id && @selected_date
+      if @selected_location_id.present?
 
         ScheduledSession.available_session_types(
-          @selected_location_id,
-          @selected_date
+          @selected_location_id
         )
 
       else
@@ -53,6 +39,26 @@ class SessionsController < ApplicationController
       @selected_session_type&.id
 
     # =========================
+    # DATES
+    # =========================
+
+    @available_dates =
+      if @selected_location_id.present? &&
+         @selected_session_type_id.present?
+
+        ScheduledSession.available_dates_for(
+          @selected_location_id,
+          @selected_session_type_id
+        )
+
+      else
+        []
+      end
+
+    @selected_date =
+      parse_selected_date || @available_dates.first
+
+    # =========================
     # SESSIONS
     # =========================
 
@@ -61,8 +67,8 @@ class SessionsController < ApplicationController
 
         ScheduledSession.filtered(
           location_id: @selected_location_id,
-          date: @selected_date,
-          session_type_id: @selected_session_type_id
+          session_type_id: @selected_session_type_id,
+          date: @selected_date
         )
 
       else
@@ -89,7 +95,8 @@ class SessionsController < ApplicationController
   def parse_selected_date
     return unless params[:date].present?
 
-    parsed_date = Date.parse(params[:date])
+    parsed_date =
+      Date.parse(params[:date])
 
     parsed_date if @available_dates.include?(parsed_date)
 
@@ -103,7 +110,7 @@ class SessionsController < ApplicationController
 
   def valid_selection?
     @selected_location_id.present? &&
-      @selected_date.present? &&
-      @selected_session_type_id.present?
+      @selected_session_type_id.present? &&
+      @selected_date.present?
   end
 end

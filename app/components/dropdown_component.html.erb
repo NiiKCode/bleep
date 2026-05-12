@@ -18,8 +18,6 @@
               'font-futura dropdown-session-type'
             elsif is_primary
               'font-futura dropdown-primary'
-            elsif is_date
-              'font-futura-heavy-italic dropdown-default'
             else
               'font-futura dropdown-default'
             end %>
@@ -49,8 +47,8 @@
   <!-- Dropdown -->
   <div
     data-dropdown-target="menu"
-    class="absolute left-0 right-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-md overflow-hidden
-           hidden opacity-0 scale-95 transition-all duration-150 ease-out z-20"
+    class="absolute left-0 right-0 mt-2 bg-white border border-gray-200 shadow-md overflow-hidden overflow-y-auto max-h-56
+          hidden opacity-0 scale-95 transition-all duration-150 ease-out z-20"
   >
 
     <% @options.compact.each do |option| %>
