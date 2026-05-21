@@ -50,7 +50,7 @@
     --font-condensed: "FuturaPT Condensed", "Arial Narrow", sans-serif;
   }
 
-  /* ---- Global UI polish (moved from old CSS) ---- */
+  /* ---- Global UI polish ---- */
 
   header {
     backdrop-filter: blur(6px);
@@ -68,7 +68,8 @@
     border-color: #e5e7eb;
   }
 
-  button, a {
+  button,
+  a {
     -webkit-tap-highlight-color: transparent;
   }
 }
@@ -106,6 +107,8 @@
    ========================= */
 @layer components {
 
+  /* ---- Headings ---- */
+
   .heading-condensed {
     font-family: var(--font-condensed);
     font-weight: 800;
@@ -125,7 +128,24 @@
     @apply text-3xl md:text-4xl;
   }
 
-  /* Dropdowns */
+  /* ---- Hero Links ---- */
+
+  .hero-link-text {
+    @apply
+      block
+      font-futura
+      font-extrabold
+      italic
+      tracking-tight
+      hover:text-fuchsia-500
+      transition-colors
+      duration-200;
+
+    font-size: clamp(1.5rem, 4vw, 2.3rem);
+    line-height: 0.95;
+  }
+
+  /* ---- Dropdowns ---- */
 
   .dropdown-primary {
     font-family: var(--font-primary);
@@ -150,15 +170,22 @@
     line-height: 1.2;
   }
 
-  /* Buttons */
+  /* ---- Buttons ---- */
 
   .book-button {
-    @apply inline-flex items-center justify-center
-           px-5 py-2.5
-           text-sm tracking-wider uppercase
-           transition-all duration-150
-           active:scale-95
-           rounded-none;
+    @apply
+      inline-flex
+      items-center
+      justify-center
+      px-5
+      py-2.5
+      text-sm
+      tracking-wider
+      uppercase
+      transition-all
+      duration-150
+      active:scale-95
+      rounded-none;
 
     font-family: var(--font-primary);
     font-weight: 800;

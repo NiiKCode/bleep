@@ -103,6 +103,9 @@ class PagesController < ApplicationController
         .order(:start_time)
   end
 
+  def about
+  end
+
   private
 
   # =========================
