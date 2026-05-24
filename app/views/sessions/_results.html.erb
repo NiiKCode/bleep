@@ -1,37 +1,56 @@
-<% if scheduled_sessions.blank? %>
-  <p class="text-center text-gray-500 pt-6">
-    No sessions found. Try changing your filters.
-  </p>
-<% else %>
+<% scheduled_sessions.each do |session| %>
 
-  <% scheduled_sessions.each do |session| %>
-    <div class="pb-6">
+  <% session.time_slots.order(:start_time).each do |time_slot| %>
 
-      <!-- Time Slots -->
-      <div class="mt-1 space-y-3 pb-2">
+    <div class="flex items-start justify-between py-6 border-b">
 
-        <% slots = time_slots.presence || session.time_slots.order(:start_time) %>
+      <div>
 
-        <% slots.each do |time_slot| %>
-          <div class="flex items-center justify-between gap-4">
+        <div class="font-futura-heavy-italic text-2xl">
+          <%= time_slot.start_time.strftime("%H.%M") %>
+          to
+          <%= time_slot.end_time.strftime("%H.%M") %>
+        </div>
 
-            <div class="text-lg font-futura-heavy-italic">
-              <%= time_slot.start_time.strftime("%H.%M") %>
-              to
-              <%= time_slot.end_time.strftime("%H.%M") %>
-            </div>
+        <div class="mt-2">
 
-            <%= link_to "BOOK",
-                  new_booking_path(time_slot_id: time_slot.id),
-                  data: { turbo_frame: "_top" },
-                  class: "book-button book-button-primary" %>
+          <div class="flex items-center gap-2">
+
+            <span class="text-fuchsia-500 font-bold text-xl">
+              <%= session.session_type.title %>
+            </span>
+
+            <button
+              data-action="click->session-info#toggle"
+              class="w-6 h-6 rounded-full border text-sm"
+            >
+              i
+            </button>
 
           </div>
-        <% end %>
+
+          <div class="mt-1 font-semibold">
+            £<%= session.price %>
+          </div>
+
+          <div
+            data-session-info-target="content"
+            class="hidden mt-3 text-sm text-gray-600"
+          >
+            <%= session.session_type.description %>
+          </div>
+
+        </div>
 
       </div>
 
+      <%= link_to "BOOK",
+            new_booking_path(time_slot_id: time_slot.id),
+            data: { turbo_frame: "_top" },
+            class: "book-button book-button-primary" %>
+
     </div>
+
   <% end %>
 
 <% end %>

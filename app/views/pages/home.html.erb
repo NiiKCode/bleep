@@ -67,7 +67,7 @@
                     method: :get,
                     data: { turbo_frame: "session_directory" } do %>
 
-        <div class="space-y-0.5">
+        <div class="space-y-4">
 
           <!-- CITY -->
           <%= render DropdownComponent.new(
@@ -85,23 +85,15 @@
             label_method: :name
           ) %>
 
-          <!-- SESSION TYPE -->
-          <%= render DropdownComponent.new(
-            name: :session_type_id,
-            options: @available_session_types.to_a.compact,
-            selected: @available_session_types&.find { |s| s.id == @selected_session_type_id } || @available_session_types&.first || "",
-            value_method: :id,
-            label_method: :title
-          ) %>
+          <!-- DATE CAROUSEL -->
+          <% if @available_dates.present? %>
 
-          <!-- DATE -->
-          <%= render DropdownComponent.new(
-            name: :date,
-            options: @available_dates.to_a.compact.map do |d|
-              [formatted_session_date(d), d]
-            end,
-            selected: @available_dates&.find { |d| d == @selected_date } || @available_dates&.first || ""
-          ) %>
+            <%= render DateCarouselComponent.new(
+              dates: @available_dates,
+              selected_date: @selected_date
+            ) %>
+
+          <% end %>
 
         </div>
 

@@ -1,0 +1,29 @@
+<div class="date-carousel">
+
+  <% @dates.each do |date| %>
+
+    <% active = date == @selected_date %>
+
+    <button
+      type="submit"
+      name="date"
+      value="<%= date %>"
+      class="
+        date-carousel-item
+        <%= active ? 'date-carousel-item-active' : '' %>
+      "
+    >
+
+      <div class="font-bold text-base">
+        <%= date.strftime("%a %-d") %>
+      </div>
+
+      <div class="text-sm text-gray-500">
+        <%= date.strftime("%b") %>
+      </div>
+
+    </button>
+
+  <% end %>
+
+</div>

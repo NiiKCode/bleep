@@ -1,9 +1,22 @@
 class PagesController < ApplicationController
   def home
-    # =========================
-    # CITIES
-    # =========================
+    load_cities
+    load_locations
+    load_dates
+    load_scheduled_sessions
+    load_time_slots
+  end
 
+  def about
+  end
+
+  private
+
+  # =========================
+  # CITIES
+  # =========================
+
+  def load_cities
     @cities =
       Location
         .distinct
@@ -12,55 +25,37 @@ class PagesController < ApplicationController
 
     @selected_city =
       params[:city].presence || @cities.first
+  end
 
-    # =========================
-    # LOCATIONS
-    # =========================
+  # =========================
+  # LOCATIONS
+  # =========================
 
+  def load_locations
     @locations =
       Location
         .where(city: @selected_city)
         .order(:name)
 
     @selected_location =
-      @locations.find_by(id: params[:location_id]) ||
-      @locations.first
+      @locations.find_by(
+        id: params[:location_id]
+      ) || @locations.first
 
     @selected_location_id =
       @selected_location&.id
+  end
 
-    # =========================
-    # SESSION TYPES
-    # =========================
+  # =========================
+  # DATES
+  # =========================
 
-    @available_session_types =
-      if @selected_location_id.present?
-        ScheduledSession.available_session_types(
-          @selected_location_id
-        )
-      else
-        SessionType.none
-      end
-
-    @selected_session_type =
-      @available_session_types.find_by(
-        id: params[:session_type_id]
-      ) || @available_session_types.first
-
-    @selected_session_type_id =
-      @selected_session_type&.id
-
-    # =========================
-    # DATES
-    # =========================
-
+  def load_dates
     @available_dates =
-      if @selected_location_id.present? &&
-         @selected_session_type_id.present?
+      if @selected_location_id.present?
 
-        ScheduledSession.available_dates_for(
-          @selected_location_id,
-          @selected_session_type_id
+        ScheduledSession.available_dates_for_location(
+          @selected_location_id
         )
 
       else
@@ -69,28 +64,31 @@ class PagesController < ApplicationController
 
     @selected_date =
       parse_selected_date || @available_dates.first
+  end
 
-    # =========================
-    # SESSIONS
-    # =========================
+  # =========================
+  # SESSIONS
+  # =========================
 
+  def load_scheduled_sessions
     @scheduled_sessions =
       if valid_selection?
 
-        ScheduledSession.filtered(
+        ScheduledSession.for_location_and_date(
           location_id: @selected_location_id,
-          session_type_id: @selected_session_type_id,
           date: @selected_date
         )
 
       else
         ScheduledSession.none
       end
+  end
 
-    # =========================
-    # TIME SLOTS
-    # =========================
+  # =========================
+  # TIME SLOTS
+  # =========================
 
+  def load_time_slots
     @time_slots =
       TimeSlot
         .joins(:scheduled_session)
@@ -102,11 +100,6 @@ class PagesController < ApplicationController
         .where("start_time >= ?", Time.current)
         .order(:start_time)
   end
-
-  def about
-  end
-
-  private
 
   # =========================
   # DATE VALIDATION
@@ -130,7 +123,6 @@ class PagesController < ApplicationController
 
   def valid_selection?
     @selected_location_id.present? &&
-      @selected_session_type_id.present? &&
       @selected_date.present?
   end
 end

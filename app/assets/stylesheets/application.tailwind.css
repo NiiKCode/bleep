@@ -170,6 +170,76 @@
     line-height: 1.2;
   }
 
+  /* ---- Date Carousel ---- */
+
+  .date-carousel {
+    @apply
+      flex
+      gap-6
+      overflow-x-auto
+      whitespace-nowrap
+      snap-x
+      snap-mandatory
+      pb-2;
+
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .date-carousel::-webkit-scrollbar {
+    display: none;
+  }
+
+  .date-carousel-item {
+    @apply
+      flex-shrink-0
+      snap-start
+      border-b-2
+      border-transparent
+      pb-1
+      transition-colors
+      duration-150;
+  }
+
+  .date-carousel-item-active {
+    @apply border-black;
+  }
+
+  /* ---- Session Cards ---- */
+
+  .session-card {
+    @apply
+      flex
+      items-start
+      justify-between
+      gap-4
+      py-6
+      border-b
+      border-gray-200;
+  }
+
+  .session-card-title {
+    @apply
+      text-fuchsia-500
+      font-bold
+      text-xl;
+  }
+
+  .session-card-price {
+    @apply
+      mt-1
+      font-semibold
+      text-black;
+  }
+
+  .session-card-description {
+    @apply
+      mt-3
+      text-sm
+      text-gray-600
+      leading-relaxed;
+  }
+
   /* ---- Buttons ---- */
 
   .book-button {

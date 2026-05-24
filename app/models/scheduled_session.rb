@@ -17,38 +17,30 @@ class ScheduledSession < ApplicationRecord
   }
 
   # =========================
-  # FILTERS
+  # AVAILABLE DATES
   # =========================
 
-  def self.available_dates_for(location_id, session_type_id)
+  def self.available_dates_for_location(location_id)
     upcoming
-      .where(
-        location_id: location_id,
-        session_type_id: session_type_id
-      )
-      .ordered
+      .where(location_id: location_id)
       .distinct
+      .ordered
       .pluck(:date)
   end
 
-  def self.available_session_types(location_id)
-    SessionType
-      .joins(:scheduled_sessions)
-      .merge(
-        upcoming.where(
-          location_id: location_id
-        )
-      )
-      .distinct
-      .order(:title)
-  end
+  # =========================
+  # FILTERED SESSIONS
+  # =========================
 
-  def self.filtered(location_id:, session_type_id:, date:)
+  def self.for_location_and_date(location_id:, date:)
     upcoming
-      .includes(:location, :session_type, :time_slots)
+      .includes(
+        :location,
+        :session_type,
+        time_slots: :bookings
+      )
       .where(
         location_id: location_id,
-        session_type_id: session_type_id,
         date: date
       )
       .ordered
