@@ -2,7 +2,10 @@
 
   <% session.time_slots.order(:start_time).each do |time_slot| %>
 
-    <div class="flex items-start justify-between py-6 border-b">
+    <div
+      class="flex items-start justify-between py-6 border-b"
+      data-controller="session-info"
+    >
 
       <div>
 
@@ -21,21 +24,33 @@
             </span>
 
             <button
+              type="button"
               data-action="click->session-info#toggle"
-              class="w-6 h-6 rounded-full border text-sm"
+              class="
+                w-6
+                h-6
+                rounded-full
+                border
+                border-black
+                text-sm
+                italic
+                flex
+                items-center
+                justify-center
+              "
             >
               i
             </button>
 
           </div>
 
-          <div class="mt-1 font-semibold">
-            £<%= session.price %>
+          <div class="mt-1 font-futura-heavy-italic text-base">
+            £<%= number_to_currency(session.price, unit: "", precision: 0) %>
           </div>
 
           <div
             data-session-info-target="content"
-            class="hidden mt-3 text-sm text-gray-600"
+            class="hidden mt-3 text-sm text-gray-600 leading-relaxed max-w-sm"
           >
             <%= session.session_type.description %>
           </div>

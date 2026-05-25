@@ -92,12 +92,12 @@ class PagesController < ApplicationController
     @time_slots =
       TimeSlot
         .joins(:scheduled_session)
+        .merge(TimeSlot.upcoming)
         .where(
           scheduled_sessions: {
             id: @scheduled_sessions.pluck(:id)
           }
         )
-        .where("start_time >= ?", Time.current)
         .order(:start_time)
   end
 

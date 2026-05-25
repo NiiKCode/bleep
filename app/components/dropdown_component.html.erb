@@ -1,17 +1,28 @@
-<div data-controller="dropdown" class="relative py-4">
+<div data-controller="dropdown" class="relative">
 
   <button
     type="button"
     data-action="click->dropdown#toggle"
-    class="w-full flex items-center justify-between text-left"
+    class="
+      w-full
+      flex
+      items-center
+      justify-between
+      text-left
+      border
+      border-black
+      px-4
+      py-4
+      bg-white
+    "
   >
 
-    <!-- Selected value -->
     <% is_session_type = @name == :session_type_id %>
     <% is_primary = [:city, :location_id].include?(@name) %>
-    <% is_date = @name.to_s.include?("date") %>
 
-    <span data-dropdown-target="label"
+    <!-- Selected value -->
+    <span
+      data-dropdown-target="label"
       class="
         leading-tight
         <%= if is_session_type
@@ -21,47 +32,86 @@
             else
               'font-futura dropdown-default'
             end %>
-      ">
+      "
+    >
       <%= selected_label %>
     </span>
 
     <!-- Chevron -->
     <svg
       data-dropdown-target="chevron"
-      width="27"
-      height="27"
+      width="24"
+      height="24"
       class="
-        flex-shrink-0 transition-transform duration-200
-        <%= @name == :session_type_id ? 'text-fuchsia-500' : 'text-black' %>
+        flex-shrink-0
+        transition-transform
+        duration-200
+        text-black
       "
       viewBox="0 0 20 20"
       fill="none"
       stroke="currentColor"
       stroke-width="2.5"
     >
-      <path d="M5 7l5 5 5-5" stroke-linecap="butt" stroke-linejoin="miter"/>
+      <path
+        d="M5 7l5 5 5-5"
+        stroke-linecap="square"
+      />
     </svg>
 
   </button>
 
-  <!-- Dropdown -->
+  <!-- Dropdown Menu -->
   <div
     data-dropdown-target="menu"
-    class="absolute left-0 right-0 mt-2 bg-white border border-gray-200 shadow-md overflow-hidden overflow-y-auto max-h-56
-          hidden opacity-0 scale-95 transition-all duration-150 ease-out z-20"
+    class="
+      absolute
+      left-0
+      right-0
+      mt-1
+      bg-white
+      border
+      border-black
+      overflow-hidden
+      overflow-y-auto
+      max-h-56
+      hidden
+      opacity-0
+      scale-95
+      transition-all
+      duration-150
+      ease-out
+      z-20
+    "
   >
 
     <% @options.compact.each do |option| %>
+
       <div
         data-action="click->dropdown#select"
         data-value="<%= option_value(option) %>"
-        class="px-4 py-3 text-sm hover:bg-gray-100 cursor-pointer transition-colors"
+        class="
+          px-4
+          py-3
+          text-sm
+          hover:bg-gray-100
+          cursor-pointer
+          transition-colors
+        "
       >
         <%= option_label(option) %>
       </div>
+
     <% end %>
 
   </div>
 
-  <%= hidden_field_tag @name, option_value(@selected) || "", data: { dropdown_target: "input" } %>
+  <%= hidden_field_tag(
+        @name,
+        option_value(@selected) || "",
+        data: {
+          dropdown_target: "input"
+        }
+      ) %>
+
 </div>

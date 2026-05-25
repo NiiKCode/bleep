@@ -2,6 +2,10 @@ class TimeSlot < ApplicationRecord
   belongs_to :scheduled_session
   has_many :bookings, dependent: :destroy
 
+  scope :upcoming, -> {
+    where("start_time > ?", Time.current)
+  }
+
   # =========================================
   # 🔒 ENFORCE CONSISTENCY
   # =========================================
