@@ -192,6 +192,7 @@
 
   .date-carousel-item {
     @apply
+      text-gray-400
       flex-shrink-0
       snap-start
       border-b-2
@@ -202,7 +203,7 @@
   }
 
   .date-carousel-item-active {
-    @apply border-black;
+    @apply border-black text-black;
   }
 
   /* ---- Session Cards ---- */
