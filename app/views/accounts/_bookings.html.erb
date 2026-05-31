@@ -17,34 +17,61 @@
   <% if upcoming_bookings.any? %>
 
     <% upcoming_bookings.each do |booking| %>
-      <div class="flex justify-between items-center">
 
-        <!-- LEFT -->
-        <div class="space-y-1">
-          <div class="font-semibold">
-            <%= booking.session_type.title %>
-          </div>
+      <div class="py-3">
 
-          <div class="text-sm text-gray-600">
-            <%= booking.session_date.strftime("%a %-d %b") %><br>
-            <%= booking.time_slot.start_time.strftime("%H:%M") %> to
-            <%= booking.time_slot.end_time.strftime("%H:%M") %>
-          </div>
+        <div class="font-semibold">
+
+          <%= booking.session_type.title %>
+
+          <% if booking.partner_user.present? %>
+            <span class="font-semibold">
+              w <%= booking.partner_user.initials %>
+            </span>
+          <% end %>
+
         </div>
 
-        <!-- RIGHT -->
-        <div class="flex items-center gap-4">
-          <div class="flex gap-1">
-            <span class="font-bold"><%= current_user.initials %></span>
-            <% if booking.partner_user %>
-              <span class="font-bold"><%= booking.partner_user.initials %></span>
-            <% end %>
-          </div>
+        <div class="text-sm tracking-widest text-gray-500 mt-1">
 
-          <span class="text-xs text-gray-400">Upcoming</span>
+          <%= booking.display_location %>
+
+          <span class="uppercase tracking-wider">
+            <%= city_code(booking.scheduled_session.location.city) %>
+          </span>
+
+        </div>
+
+        <div
+          class="
+            text-xs
+            uppercase
+            tracking-widest
+            text-gray-500
+            mt-1
+          "
+        >
+
+          <%= formatted_session_date(
+                booking.session_date
+              ).upcase %>
+
+          /
+
+          <%= booking.time_slot.start_time.strftime("%H.%M") %>–<%= booking.time_slot.end_time.strftime("%H.%M") %>
+
+          /
+
+          £<%= number_to_currency(
+                booking.price,
+                unit: "",
+                precision: 0
+              ) %>
+
         </div>
 
       </div>
+
     <% end %>
 
   <% else %>

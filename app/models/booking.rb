@@ -35,6 +35,10 @@ class Booking < ApplicationRecord
     scheduled_session&.date
   end
 
+  def display_location
+    scheduled_session&.location&.name
+  end
+
   # ========================
   # ✅ SINGLE SOURCE OF TRUTH (TIME-BASED, TZ SAFE)
   # ========================
