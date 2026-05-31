@@ -38,7 +38,7 @@ export default class extends Controller {
     users.forEach(user => {
       const div = document.createElement("div")
 
-      div.className = "p-3 border rounded-xl cursor-pointer hover:bg-gray-100"
+      div.className = "p-3 border-2 border-black cursor-pointer hover:bg-gray-100"
 
       div.innerHTML = `
         <div class="font-semibold">${user.email}</div>
@@ -97,24 +97,48 @@ export default class extends Controller {
     const row = document.createElement("div")
 
     row.className =
-      "border rounded-xl p-4 cursor-pointer transition hover:bg-gray-50"
+      "border-2 border-black p-4 cursor-pointer transition hover:bg-gray-50"
 
     row.setAttribute("data-friend-select-target", "row")
     row.setAttribute("data-action", "click->friend-select#toggle")
     row.dataset.friendId = data.id
 
     row.innerHTML = `
-      <div class="font-semibold">${data.email}</div>
-      <div class="text-sm text-gray-500">${data.initials}</div>
-      <div data-friend-select-target="message"
-           class="hidden text-sm mt-2 text-green-600 font-semibold">
-        Partner selected
-      </div>
-    `
+    <div class="flex justify-between items-center">
 
-    this.friendsListTarget.prepend(row)
-    row.click()
-  }
+      <div class="flex items-center gap-3 min-w-0">
+
+        <div class="font-semibold truncate">
+          ${data.email}
+        </div>
+
+        <div class="text-xs uppercase tracking-widest text-gray-500 flex-shrink-0">
+          ${data.initials}
+        </div>
+
+      </div>
+
+      <div
+        data-friend-select-target="message"
+        class="
+          hidden
+          text-xs
+          uppercase
+          tracking-wide
+          text-fuchsia-600
+          font-bold
+          flex-shrink-0
+        "
+      >
+        Selected
+      </div>
+
+    </div>
+  `
+
+  this.friendsListTarget.prepend(row)
+  row.click()
+}
 
   // ========================
   // SELECT / DESELECT

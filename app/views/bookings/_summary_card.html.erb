@@ -1,0 +1,92 @@
+<div class="mt-6 border-2 border-black p-5">
+
+  <!-- SESSION TITLE + INFO -->
+  <div data-controller="session-info">
+
+    <div class="flex items-center gap-2">
+
+      <div class="heading-lg font-extrabold text-fuchsia-600">
+        <%= session_type.title %>
+      </div>
+
+      <% if session_type.description.present? %>
+
+        <button
+          type="button"
+          data-action="click->session-info#toggle"
+          class="
+            w-6
+            h-6
+            rounded-full
+            border
+            border-black
+            italic
+            text-sm
+            flex
+            items-center
+            justify-center
+          "
+        >
+          i
+        </button>
+
+      <% end %>
+
+    </div>
+
+    <% if session_type.description.present? %>
+
+      <div
+        data-session-info-target="content"
+        class="
+          hidden
+          mt-3
+          text-sm
+          text-gray-600
+          leading-relaxed
+          max-w-md
+        "
+      >
+        <%= session_type.description %>
+      </div>
+
+    <% end %>
+
+  </div>
+
+  <!-- SESSION DETAILS -->
+  <div class="mt-5">
+
+    <div class="text-lg font-bold">
+
+      <%= location.name %>
+
+      <span class="uppercase tracking-wider">
+        <%= city_code(location.city) %>
+      </span>
+
+    </div>
+
+    <div class="mt-2 text-sm font-bold uppercase tracking-widest">
+
+      <%= formatted_session_date(
+            scheduled_session.date
+          ).upcase %>
+
+      /
+
+      <%= time_slot.start_time.strftime("%H.%M") %>–<%= time_slot.end_time.strftime("%H.%M") %>
+
+      /
+
+      £<%= number_to_currency(
+            scheduled_session.price,
+            unit: "",
+            precision: 0
+          ) %>
+
+    </div>
+
+  </div>
+
+</div>

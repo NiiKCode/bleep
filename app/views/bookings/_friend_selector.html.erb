@@ -1,0 +1,126 @@
+<div class="mt-6 border-2 border-black p-5">
+
+  <%= render SectionComponent.new(
+        title: 'Partner with a friend <span class="text-sm font-normal">(optional)</span>'.html_safe
+      ) do %>
+
+    <div data-controller="friend-select">
+
+      <!-- SEARCH -->
+      <div>
+
+        <label class="text-sm font-semibold mb-2 block">
+          Search by email
+        </label>
+
+        <div
+          class="
+            border-2
+            border-black
+            px-4
+            py-3
+            transition
+            focus-within:ring-9
+            focus-within:ring-fuchsia-700
+          "
+        >
+
+          <%= text_field_tag :partner_email,
+                nil,
+                class: "w-full text-lg bg-transparent focus:outline-none",
+                placeholder: "Start typing email...",
+                data: {
+                  action: "input->friend-select#search",
+                  friend_select_target: "email"
+                } %>
+
+        </div>
+
+      </div>
+
+      <!-- SEARCH RESULTS -->
+      <div
+        data-friend-select-target="results"
+        class="space-y-1"
+      ></div>
+
+      <!-- HIDDEN FIELD -->
+      <%= hidden_field_tag :existing_friend_id,
+            nil,
+            data: {
+              friend_select_target: "input"
+            } %>
+
+      <!-- EXISTING FRIENDS -->
+      <div class="space-y-3 pt-4">
+
+        <h3 class="text-xs uppercase tracking-widest text-gray-500">
+          Existing friends
+        </h3>
+
+        <div
+          data-friend-select-target="friendsList"
+          class="space-y-2"
+        >
+
+          <% current_user.all_friends.each do |friend| %>
+
+            <div
+              data-friend-select-target="row"
+              data-friend-id="<%= friend.id %>"
+              data-action="click->friend-select#toggle"
+              class="
+                bg-gray-100
+                p-4
+                cursor-pointer
+                transition
+                hover:bg-gray-50
+              "
+            >
+
+              <div class="flex justify-between items-center">
+
+                <div class="flex items-center gap-3 min-w-0">
+
+                  <div class="font-semibold truncate">
+                    <%= friend.email %>
+                  </div>
+
+                  <% if friend.respond_to?(:initials) && friend.initials.present? %>
+                    <div class="text-xs uppercase tracking-widest text-gray-500 flex-shrink-0">
+                      <%= friend.initials %>
+                    </div>
+                  <% end %>
+
+                </div>
+
+                <div
+                  data-friend-select-target="message"
+                  class="
+                    hidden
+                    text-xs
+                    uppercase
+                    tracking-wide
+                    text-fuchsia-600
+                    font-bold
+                    flex-shrink-0
+                  "
+                >
+                  Selected
+                </div>
+
+              </div>
+
+            </div>
+
+          <% end %>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  <% end %>
+
+</div>
