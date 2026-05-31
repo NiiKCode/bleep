@@ -20,12 +20,12 @@
 
       <div class="py-3">
 
-        <div class="font-bold">
+        <div class="font-bold text-fuchsia-600">
 
           <%= booking.session_type.title %>
 
           <% if booking.partner_user.present? %>
-            <span class="font-bold">
+            <span class="font-bold text-black">
               w <%= booking.partner_user.initials %>
             </span>
           <% end %>
