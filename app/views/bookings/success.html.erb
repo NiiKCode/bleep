@@ -1,21 +1,38 @@
-<div class="min-h-screen justify-center px-6">
+<div class="min-h-screen px-6 py-10">
 
-  <h2 class="text-xl font-bold">
-    Payment <%= @payment_status == "paid" ? "successful 🎉" : "processing..." %>
-  </h2>
+  <h1
+    class="
+      heading-condensed
+      heading-lg
+      uppercase
+      <%= @payment_status == 'paid' ? 'text-fuchsia-600' : 'text-black' %>
+    "
+  >
+    <%= @payment_status == "paid" ? "PAID" : "PROCESSING..." %>
+  </h1>
 
-  <p class="mt-2">Your booking has been received.</p>
+  <p class="mt-4">
+    Your booking has been received.
+  </p>
 
-  <p class="mt-1">Status: <%= @payment_status %></p>
+  <% unless @payment_status == "paid" %>
 
-  <% if @payment_status != "paid" %>
-    <p class="text-gray-500 mt-2">
-      Final confirmation may take a few seconds...
+    <p class="mt-4 text-gray-500">
+      Final confirmation may take a few seconds.
     </p>
+
   <% end %>
 
-  <p class="text-gray-500 mt-3">
-    Redirecting you to your account...
+  <p
+    class="
+      mt-8
+      text-xs
+      uppercase
+      tracking-widest
+      text-gray-500
+    "
+  >
+    Redirecting to account...
   </p>
 
 </div>
@@ -23,5 +40,5 @@
 <script>
   setTimeout(function() {
     window.location.href = "<%= account_path %>";
-  }, 3000);
+  }, 5000);
 </script>
